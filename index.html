@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบทดสอบวิทยาศาสตร์ ม.ต้น (N-NET)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0284c7; --primary-dark: #0369a1; --primary-light: #e0f2fe;
+    --green: #16a34a; --green-light: #dcfce7;
+    --red: #dc2626; --red-light: #fee2e2;
+    --gray-bg: #f8fafc; --gray-card: #ffffff; --gray-border: #e2e8f0;
+    --text: #0f172a; --text-muted: #64748b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Sarabun', sans-serif; background: var(--gray-bg); color: var(--text); padding-bottom: 60px; }
+  .container { max-width: 680px; margin: 0 auto; padding: 16px; }
+  
+  .header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 16px; padding: 24px; color: #fff; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(2,132,199,0.15); }
+  .badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 10px; }
+  .title { font-size: 22px; font-weight: 700; margin-bottom: 5px; line-height: 1.4; }
+  .subtitle { font-size: 14px; opacity: 0.9; }
+
+  .card { background: var(--gray-card); border-radius: 16px; padding: 24px; border: 1px solid var(--gray-border); margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+  
+  .inp-group { margin-bottom: 16px; text-align: left; }
+  .inp-label { display: block; font-size: 14px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+  .inp-text { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--gray-border); font-family: 'Sarabun', sans-serif; font-size: 16px; background: #fdfdfd; }
+  
+  .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-family: 'Sarabun', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
+  .btn-secondary { background: #e2e8f0; color: var(--text); width: 48%; }
+  
+  .nav-buttons { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
+  .nav-buttons .btn-primary { width: 48%; }
+
+  .prog-text { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .prog-bar { background: #e2e8f0; height: 10px; border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+  .prog-fill { background: var(--primary); height: 100%; width: 0%; transition: 0.3s; }
+
+  .q-badge { font-size: 12px; color: var(--primary-dark); background: var(--primary-light); display: inline-block; padding: 4px 10px; border-radius: 6px; font-weight: 700; margin-bottom: 12px; }
+  .q-text { font-size: 18px; font-weight: 600; margin-bottom: 20px; line-height: 1.6; }
+
+  .choices { display: flex; flex-direction: column; gap: 12px; }
+  .choice { display: flex; align-items: center; background: #fff; border: 2px solid var(--gray-border); padding: 14px 16px; border-radius: 12px; cursor: pointer; font-size: 15px; font-family: 'Sarabun', sans-serif; text-align: left; transition: 0.2s; width: 100%; min-height: 60px; }
+  
+  .choice.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary-dark); font-weight: 600; }
+  .choice.correct { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 600; }
+  .choice.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); font-weight: 600; }
+  
+  .c-let { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; border-radius: 50%; margin-right: 15px; font-weight: 700; font-size: 14px; flex-shrink: 0; color: var(--text-muted); }
+  .choice.selected .c-let { background: var(--primary); color: #fff; }
+  .choice.correct .c-let { background: var(--green); color: #fff; }
+  .choice.wrong .c-let { background: var(--red); color: #fff; }
+
+  .feedback { padding: 16px; border-radius: 12px; font-size: 14px; line-height: 1.6; margin-top: 16px; }
+  .feedback.ok { background: var(--green-light); border: 1px solid var(--green); color: var(--green); }
+  .feedback.no { background: var(--red-light); border: 1px solid var(--red); color: var(--red); }
+  .fb-explain { font-size: 13px; color: #334155; background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px; margin-top: 10px; display: block; border-left: 3px solid var(--text-muted); }
+  
+  .analysis-card { background: #ffffff; border: 1px solid var(--gray-border); border-radius: 16px; padding: 24px; text-align: left; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+  .analysis-header { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .analysis-item { background: #f8fafc; padding: 12px 16px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #cbd5e1; }
+  .analysis-item.weak { border-left-color: var(--red); background: #fff5f5; }
+  .analysis-item.good { border-left-color: var(--green); background: #f6fdf9; }
+  .analysis-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 4px; }
+  .analysis-tag.weak { background: var(--red-light); color: var(--red); }
+  .analysis-tag.good { background: var(--green-light); color: var(--green); }
+
+  .grid-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 20px 0; }
+  .stat-box { background: #f8fafc; padding: 16px 10px; border-radius: 12px; text-align: center; border: 1px solid var(--gray-border); }
+  .stat-num { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  .stat-num.green { color: var(--green); }
+  .stat-num.red { color: var(--red); }
+  .stat-num.blue { color: var(--primary); }
+  
+  .review-item { padding: 16px 0; border-bottom: 1px solid var(--gray-border); text-align: left; }
+  .review-item:last-child { border-bottom: none; }
+  .r-q { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .r-a { font-size: 14px; margin-bottom: 4px; }
+  .ri-tick { display: inline-block; width: 20px; font-weight: bold; margin-right: 5px; }
+  .ri-tick.ok { color: var(--green); }
+  .ri-tick.no { color: var(--red); }
+
+  .dot-nav { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; justify-content: center; }
+  .dot { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--gray-border); font-family: 'Sarabun'; font-weight: 600; font-size: 12px; cursor: pointer; background: #fff; color: var(--text); }
+  .dot.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .dot.ok { background: var(--green-light); color: var(--green); border-color: var(--green); }
+  .dot.no { background: var(--red-light); color: var(--red); border-color: var(--red); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="badge">N-NET • สกร. มัธยมศึกษาตอนต้น</div>
+    <div class="title">🧪 แบบทดสอบวิชาวิทยาศาสตร์ (เน้นการประยุกต์วิเคราะห์)</div>
+    <div class="subtitle" id="subtitle-text">ระบบประเมินสมรรถนะการคิดวิเคราะห์ตามมาตรฐานวิทยาศาสตร์</div>
+  </div>
+  
+  <div id="app"></div>
+</div>
+
+<script>
+const database = [
+  { cat: "สิ่งมีชีวิตและสิ่งแวดล้อม", q: "หากชาวสวนใช้สารเคมีฆ่าแมลงชนิดที่สลายตัวยากในปริมาณมากเป็นเวลานาน สารพิษจะสะสมในสิ่งมีชีวิตใดในโซ่อาหารนี้มากที่สุด: ต้นข้าว -> ตั๊กแตน -> กบ -> เหยี่ยว?", choices: ["เหยี่ยว", "ต้นข้าว", "ตั๊กแตน", "กบ"], a: 0, exp: "ตามหลักการสะสมสารพิษในโซ่อาหาร (Biomagnification) สารพิษที่สลายตัวยากจะสะสมเพิ่มขึ้นตามลำดับขั้นการกิน สิ่งมีชีวิตที่เป็นผู้บริโภคอันดับสูงสุด (เหยี่ยว) จะได้รับสารพิษสะสมเข้มข้นที่สุดในร่างกาย" },
+  { cat: "สิ่งมีชีวิตและสิ่งแวดล้อม", q: "เด็ดใบไม้ที่โดนแสงแดดจัดมาต้มในแอลกอฮอล์เพื่อละลายคลอโรฟิลล์ออก จากนั้นทดสอบด้วยน้ำยาไอโอดีน สารอาหารชนิดใดที่จะทำปฏิกิริยากับไอโอดีนแล้วเปลี่ยนเป็นสีน้ำเงินเข้ม?", choices: ["แป้ง", "น้ำตาลกลูโคส", "โปรตีน", "ไขมัน"], a: 0, exp: "กระบวนการสังเคราะห์ด้วยแสงจะผลิตน้ำตาลกลูโคสขึ้นมาก่อน จากนั้นพืชจะเปลี่ยนกลูโคสส่วนเกินไปเก็บสะสมไว้ในรูปของ 'แป้ง' ซึ่งแป้งจะทำปฏิกิริยากับน้ำยาไอโอดีนเปลี่ยนจากสีน้ำตาลแกมเหลืองเป็นสีน้ำเงินเข้ม" },
+  { cat: "สิ่งมีชีวิตและสิ่งแวดล้อม", q: "ส่วนโครงสร้างใดของเซลล์พืชที่ทำหน้าที่ควบคุมการเข้า-ออกของสารอย่างเป็นระบบ และทำหน้าที่เป็น 'เยื่อเลือกผ่าน' (Semi-permeable membrane)?", choices: ["เยื่อหุ้มเซลล์", "ผนังเซลล์", "นิวเคลียส", "ไซโทพลาซึม"], a: 0, exp: "เยื่อหุ้มเซลล์ทำหน้าที่เป็นเยื่อเลือกผ่าน คอยคุมสารเข้าออก ส่วน 'ผนังเซลล์' (ตัวลวงยอดนิยม) มีหน้าที่ให้ความแข็งแรงเท่านั้น ยอมให้สารเกือบทุกชนิดผ่านได้โดยไม่เลือก" },
+  { cat: "สิ่งมีชีวิตและสิ่งแวดล้อม", q: "เมื่อเราออกกำลังกายอย่างหนัก ร่างกายจะมีปริมาณแก๊สคาร์บอนไดออกไซด์ในเลือดสูงขึ้น ระบบประสาทจะสั่งการให้ร่างกายตอบสนองเพื่อรักษาดุลยภาพอย่างไร?", choices: ["อัตราการหายใจเข้า-ออกเพิ่มขึ้น", "หัวใจเต้นช้าลงเพื่อออมพลังงาน", "เส้นเลือดหดตัวเพื่อเพิ่มความดัน", "เหงื่อหยุดไหลเพื่อกักเก็บน้ำ"], a: 0, exp: "เมื่อ CO₂ ในเลือดสูง เลือดจะมีความเป็นกรดเพิ่มขึ้น สมองส่วนท้ายจะสั่งการให้กะบังลมและกระดูกซี่โครงทำงานเร็วขึ้น ส่งผลให้อัตราการหายใจเพิ่มขึ้นเพื่อขับ CO₂ ออกและนำ O₂ เข้าสู่ร่างกาย" },
+  { cat: "สิ่งมีชีวิตและสิ่งแวดล้อม", q: "การตัดไม้ทำลายป่าในพื้นที่ต้นน้ำส่งผลโดยตรงต่อการเกิดอุทกภัยและดินโคลนถล่มอย่างไรในเชิงวิทยาศาสตร์?", choices: ["ขาดรากพืชช่วยยึดดินและซับน้ำฝน", "ทำให้ปริมาณน้ำฝนตกลงมามากกว่าปกติ", "ทำให้ดินเกิดแรงผลักดันทางเคมี", "ชั้นหินใต้ดินเกิดการขยายตัวขัดกัน"], a: 0, exp: "รากของต้นไม้ช่วยยึดเกาะหน้าดินไม่ให้พังทลาย และระบบป่าไม้ช่วยชะลอความเร็วของน้ำฝนรวมถึงดูดซับน้ำไว้ เมื่อไม่มีต้นไม้ ดินจึงสูญเสียโครงสร้างยึดเกาะและอุ้มน้ำไม่ได้ ทำให้น้ำป่าไหลหลากหลอมดินถล่มทันที" },
+  { cat: "สารเพื่อชีวิต", q: "นำน้ำเชื่อมแก้วหนึ่งตั้งทิ้งไว้กลางแดดจนน้ำบางส่วนระเหยออกไป หลังจากน้ำระเหยแล้ว สารละลายน้ำเชื่อมที่เหลืออยู่จะมีลักษณะการเปลี่ยนแปลงอย่างไร?", choices: ["มีความเข้มข้นเพิ่มขึ้น", "มีความเข้มข้นลดลง", "มีจุดเดือดต่ำลง", "ตัวละลายมีมวลลดลง"], a: 0, exp: "เมื่อน้ำที่เป็น 'ตัวทำละลาย' ระเหยออกไป แต่ตัวน้ำตาลที่เป็น 'ตัวละลาย' ยังอยู่เท่าเดิม อัตราส่วนของตัวละลายต่อตัวทำละลายจึงสูงขึ้น ส่งผลให้น้ำเชื่อมเข้มข้นและหวานขึ้น ตัวลวงมักคิดว่าปริมาณลดลงแล้วจะเจือจางลง" },
+  { cat: "สารเพื่อชีวิต", q: "ข้อใดเป็นเกณฑ์ทางเคมีที่ใช้จำแนกได้อย่างถูกต้องว่าสารใดเป็น 'สารบริสุทธิ์' และสารใดเป็น 'สารละลาย'?", choices: ["สารบริสุทธิ์มีจุดเดือดและจุดหลอมเหลวคงที่", "สารละลายไม่สามารถแยกส่วนประกอบได้อีก", "สารบริสุทธิ์ต้องเป็นของเหลวใสไม่มีสีเท่านั้น", "สารละลายจะมีอุณหภูมิขณะเดือดคงที่เสมอ"], a: 0, exp: "สารบริสุทธิ์ (เช่น น้ำกลั่น) จะมีจุดเดือดและจุดหลอมเหลวที่คงที่ ณ ความดันมาตรฐาน ส่วนสารละลาย (เช่น น้ำเกลือ) อัตราส่วนผสมเปลี่ยนไปเรื่อยๆ ทำให้จุดเดือดไม่คงที่และจะค่อยๆ สูงขึ้นขณะเดือด" },
+  { cat: "สารเพื่อชีวิต", q: "สารส้ม (Alum) มักถูกนำมาใช้ในกระบวนการผลิตน้ำประปาพื้นบ้านหรืองานบรรเทาน้ำขุ่นในชุมชน สารส้มทำหน้าที่อะไรในทางวิทยาศาสตร์?", choices: ["ช่วยให้ตะกอนขนาดเล็กจับตัวกันแล้วตกตะกอน", "ฆ่าเชื้อแบคทีเรียและจุลินทรีย์ในน้ำ", "ปรับสภาพน้ำกรดให้เป็นกลางอย่างรวดเร็ว", "ฟอกสีของน้ำให้ใสสะอาดไร้กลิ่น"], a: 0, exp: "สารส้มทำหน้าที่เป็นสารสร้างสารจับตะกอน (Coagulant) ทำให้อนุภาคดินหรือตะกอนขนาดเล็กที่แขวนลอยอยู่รวมตัวกันเป็นก้อนใหญ่ขึ้นจนมีน้ำหนักมากและตกตะกอนลงสู่ก้นภาชนะได้อย่างรวดเร็ว ไม่ได้ทำหน้าที่ฆ่าเชื้อโรคเหมือนคลอรีน" },
+  { cat: "สารเพื่อชีวิต", q: "เมื่อผสมกรดไฮโดรคลอริก (กรดเกลือ) กับผงฟู (โซเดียมไฮโดรเจนคาร์บอเนต) ในขวดปิด จะมีแก๊สชนิดใดเกิดขึ้นซึ่งสามารถนำไปใช้ดับไฟได้?", choices: ["แก๊สคาร์บอนไดออกไซด์", "แก๊สไฮโดรเจน", "แก๊สออกซิเจน", "แก๊สไนโตรเจน"], a: 0, exp: "ปฏิกิริยาระหว่างกรดกับสารประกอบคาร์บอเนต (เช่น ผงฟู หรือหินปูน) จะได้ผลิตภัณฑ์เป็นเกลือ น้ำ และ 'แก๊สคาร์บอนไดออกไซด์' (CO₂) ซึ่งแก๊สนี้มีคุณสมบัติไม่ช่วยให้ไฟติดและหนาแน่นกว่าอากาศ จึงนำมาใช้ดับไฟได้" },
+  { cat: "สารเพื่อชีวิต", q: "วางตะปูเหล็กไว้ในสภาวะใดต่อไปนี้ ที่จะทำให้เกิด 'สนิมเหล็ก' ได้รวดเร็วและรุนแรงที่สุด?", choices: ["ในขวดโหลที่มีน้ำและเปิดฝาทิ้งไว้ให้อากาศเข้า", "ในขวดโหลที่แห้งสนิทและมีสารดูดความชื้น", "ในน้ำต้มสุกที่ปิดฝาสนิทและราดน้ำมันเคลือบหน้า", "ในตู้เย็นที่ไม่มีความชื้นสัมพัทธ์"], a: 0, exp: "การเกิดสนิมเหล็ก (Iron Oxidation) จำเป็นต้องใช้ปัจจัยร่วมกัน 2 อย่างคือ 'น้ำ' และ 'แก๊สออกซิเจน' การใส่น้ำและเปิดฝาให้อากาศเข้าจึงพร้อมที่สุด ส่วนน้ำต้มสุกจะไม่มีแก๊สออกซิเจนละลายอยู่ทำให้อัตราเกิดสนิมต่ำมาก" },
+  { cat: "แรงและพลังงาน", q: "ออกแรงผลักกล่องไม้หนัก 50 นิวตัน ให้เคลื่อนที่ไปข้างหน้าบนพื้นราบเป็นระยะทาง 4 เมตร ต้องใช้เวลาทั้งสิ้น 5 วินาที งานที่เกิดขึ้นจากการผลักกล่องนี้มีค่ากี่จูล?", choices: ["200 จูล", "250 จูล", "40 จูล", "1,000 จูล"], a: 0, exp: "สูตร งาน (W) = แรง (F) x ระยะทางตามแนวแรง (s) = 50 นิวตัน x 4 เมตร = 200 จูล (ส่วนเวลา 5 วินาทีนั้นเป็นตัวลวงที่โจทย์ให้มาเผื่อกรณีคิดกำลังไฟฟ้า/กำลังงาน ซึ่งไม่ได้นำมาคูณในข้อนี้)" },
+  { cat: "แรงและพลังงาน", q: "เหตุใดรถแทรกเตอร์หรือรถที่ใช้ในงานเกษตรกรรมตามท้องนา จึงต้องใช้วงล้อรถขนาดใหญ่และมีหน้ายางกว้างมากเมื่อเทียบกับรถยนต์ทั่วไป?", choices: ["เพื่อลดความดันกดทับพื้นดิน ป้องกันล้อจมโคลน", "เพื่อเพิ่มแรงเสียดทานจลน์ให้รถวิ่งเร็วขึ้น", "เพื่อเพิ่มน้ำหนักให้ตัวรถยึดเกาะดินได้หนาแน่น", "เพื่อลดการทำงานของระบบเกียร์และเครื่องยนต์"], a: 0, exp: "ตามหลักการ ความดัน = แรง / พื้นที่ (P = F/A) การเพิ่มพื้นที่หน้ายาง (หน้ายางกว้าง ล้อใหญ่) จะช่วยกระจายน้ำหนักของรถ ทำให้ความดันที่กดลงบนพื้นโคลนลดลง ล้อรถจึงไม่จมลึกลงในเลน" },
+  { cat: "แรงและพลังงาน", q: "โยนลูกบอลขึ้นไปในอากาศตรงๆ ในแนวดิ่ง ณ จุดสูงสุดที่ลูกบอลเคลื่อนที่ไปถึงก่อนจะตกกลับลงมา ลูกบอลมีพลังงานอย่างไร?", choices: ["พลังงานศักย์โน้มถ่วงสูงสุด พลังงานจลน์เป็นศูนย์", "พลังงานจลน์สูงสุด พลังงานศักย์โน้มถ่วงเป็นศูนย์", "มีพลังงานจลน์และพลังงานศักย์เท่ากันพอดี", "ไม่มีพลังงานใดๆ เหลืออยู่เลยเนื่องจากหยุดนิ่ง"], a: 0, exp: "ณ จุดสูงสุด ลูกบอลจะหยุดนิ่งชั่วขณะ ความเร็วเป็นศูนย์ ทำให้ พลังงานจลน์ (Eₖ = ½mv²) เป็นศูนย์ แต่เนื่องจากอยู่ที่ตำแหน่งสูงที่สุดจากพื้น พลังงานศักย์โน้มถ่วง (Eₚ = mgh) จึงมีค่าสูงที่สุด" },
+  { cat: "แรงและพลังงาน", q: "เมื่อเราจุ่มช้อนโลหะและช้อนพลาสติกลงในถ้วยน้ำร้อนพร้อมกัน ผ่านไป 2 นาที ปลายช้อนโลหะจะร้อนกว่าปลายช้อนพลาสติก ปรากฏการณ์นี้อธิบายด้วยหลักการใด?", choices: ["การนำความร้อน", "การพาความร้อน", "การแผ่รังสีความร้อน", "การสะท้อนความร้อน"], a: 0, exp: "การที่ความร้อนเคลื่อนที่ผ่านตัวกลางที่เป็นของแข็ง (เช่น โลหะ) โดยที่อนุภาคของตัวกลางไม่ได้เคลื่อนที่ไปด้วย แต่ใช้วิธีสั่นส่งต่อพลังงาน เรียกว่า 'การนำความร้อน' (Conduction) โลหะเป็นตัวนำความร้อนที่ดีกว่าพลาสติก" },
+  { cat: "แรงและพลังงาน", q: "หากคุณยืนอยู่หลังหน้าต่างกระจกฝ้า แล้วมองเห็นแสงไฟจากรถยนต์ภายนอกเป็นดวงเบลอๆ แต่ไม่สามารถมองเห็นทะเบียนรถได้ชัดเจน กระจกฝ้านี้จัดเป็นวัตถุประเภทใด?", choices: ["วัตถุโปร่งแสง", "วัตถุโปร่งใส", "วัตถุทึบแสง", "วัตถุสะท้อนแสง"], a: 0, exp: "วัตถุโปร่งแสง (Translucent) คือวัตถุที่ยอมให้แสงผ่านได้บ้างแต่ไม่ทั้งหมด ทำให้แสงกระจายตัว ทะลุผ่านแต่กระจัดกระจาย มองเห็นสิ่งหลังวัตถุไม่ชัดเจน ต่างจากโปร่งใสที่ชัดเจน และทึบแสงที่แสงผ่านไม่ได้เลย" },
+  { cat: "โลกและอวกาศ", q: "แก๊สชนิดใดในบรรยากาศโลกที่เป็นสาเหตุหลักในการดูดซับรังสีความร้อนสะสมไว้ ก่อให้เกิด 'ปรากฏการณ์เรือนกระจก' (Greenhouse Effect) จนอุณหภูมิโลกสูงขึ้น?", choices: ["แก๊สคาร์บอนไดออกไซด์", "แก๊สโอโซน", "แก๊สออกซิเจน", "แก๊สไนโตรเจน"], a: 0, exp: "แก๊สคาร์บอนไดออกไซด์ (CO₂) และแก๊สมีเทน เป็นแก๊สเรือนกระจกหลักที่กักเก็บความร้อนไว้ในบรรยากาศ (ส่วน 'โอโซน' เป็นตัวลวง ซึ่งโอโซนทำหน้าที่กรองรังสี UV ไม่ใช่แก๊สหลักที่ดักจับความร้อนเรือนกระจก)" },
+  { cat: "โลกและอวกาศ", q: "หินงอกและหินย้อยที่เกิดขึ้นภายในถ้ำหินปูนตามธรรมชาติ เกิดจากกระบวนการทางวิทยาศาสตร์ในข้อใดเป็นสำคัญ?", choices: ["ปฏิกิริยาเคมีของน้ำฝนที่เป็นกรดอ่อนกับหินปูน", "การสึกกร่อนจากแรงลมพายุพัดผ่านช่องถ้ำ", "การดันตัวของลาวาเหลวจากใต้เปลือกโลก", "การสะสมตะกอนดินเหนียวที่น้ำพัดพามา"], a: 0, exp: "น้ำฝนละลาย CO₂ ในอากาศกลายเป็นกรดคาร์บอนิกอ่อนๆ เมื่อซึมผ่านหินปูนจะกัดเซาะได้สารละลายแคลเซียมไฮโดรเจนคาร์บอเนต เมื่อน้ำหยดและระเหยออกจะตกตะกอนกลับเป็นหินปูนแข็งเกิดเป็นหินงอกหินย้อย" },
+  { cat: "โลกและอวกาศ", q: "ถ้าในคืนหนึ่งคุณสังเกตเห็นดวงจันทร์สว่างเต็มดวง (วันขึ้น 15 ค่ำ) ปรากฏการณ์นี้เกิดขึ้นเนื่องจากตำแหน่งการเรียงตัวของดวงดาวในข้อใด?", choices: ["ดวงจันทร์และดวงอาทิตย์อยู่คนละด้านของโลก", "ดวงจันทร์อยู่ตรงกลางระหว่างโลกกับดวงอาทิตย์", "โลก ดวงจันทร์ ดวงอาทิตย์ ทำมุมตั้งฉากกันพอดี", "ดวงอาทิตย์อยู่ตรงกลางระหว่างโลกกับดวงจันทร์"], a: 0, exp: "วันเพ็ญดวงจันทร์เต็มดวง เกิดจากดวงจันทร์โคจรมาอยู่ฝั่งตรงข้ามกับดวงอาทิตย์โดยมีโลกอยู่ตรงกลาง ทำให้ด้านที่ดวงจันทร์ได้รับแสงอาทิตย์สะท้อนหันกลับมาทางโลกเต็มๆ (ถ้าดวงจันทร์อยู่ตรงกลางจะเป็นวันดับหรือจันทร์ดับ)" },
+  { cat: "โลกและอวกาศ", q: "การทำนาเกลือริมทะเลในประเทศไทย มักอาศัยประโยชน์จากลมชนิดใดที่พัดสลับสับเปลี่ยนทิศทางในรอบวัน ระหว่างเวลากลางวันและกลางคืน?", choices: ["ลมบก ลมทะเล", "ลมมรสุมตะวันตกเฉียงใต้", "ลมตะวันออกเหนือ", "ลมดอย ลมหุบเขา"], a: 0, exp: "ลมบกลมทะเลเป็นลมประจำเวลาที่เกิดจากความร้อนจำเพาะที่ต่างกันของพื้นดินและพื้นน้ำ โดยลมทะเลพัดเข้ากลางวัน ลมบกพัดออกกลางคืน ช่วยให้อากาศเหนือนากลือหมุนเวียนระเหยน้ำเกลือได้ดี" },
+  { cat: "โลกและอวกาศ", q: "เครื่องมือวัดทางอุตุนิยมวิทยาชนิดใด ที่ชาวบ้านหรือเกษตรกรสามารถใช้ตรวจวัด 'ความชื้นสัมพัทธ์' ในอากาศเพื่อวางแผนการตากผลผลิตทางการเกษตร?", choices: ["ไฮโกรมิเตอร์", "บารอมิเตอร์", "เทอร์มอมิเตอร์", "แอนีโมมิเตอร์"], a: 0, exp: "ไฮโกรมิเตอร์ (Hygrometer) ใช้สำหรับวัดความชื้นสัมพัทธ์ในอากาศ ส่วนตัวลวงอื่น: บารอมิเตอร์วัดความดันอากาศ, เทอร์มอมิเตอร์วัดอุณหภูมิ, และแอนีโมมิเตอร์วัดความเร็วลม" }
+];
+
+let state = {
+  screen: 'login', studentName: '', studentId: '', questions: [], answers: [], checked: [], current: 0
+};
+
+function shuffleArray(arr) {
+  let newArr = arr.slice();
+  for (let i = newArr.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+  }
+  return newArr;
+}
+
+function startApp() {
+  const nameInput = document.getElementById('s_name').value;
+  const idInput = document.getElementById('s_id').value;
+  if (!nameInput.trim()) { alert('กรุณากรอกชื่อ-นามสกุลก่อนเข้าสอบครับ'); return; }
+  
+  state.studentName = nameInput;
+  state.studentId = idInput || 'สกร. มัธยมศึกษาตอนต้น';
+  document.getElementById('subtitle-text').innerText = 'ผู้เข้าสอบ: ' + state.studentName;
+  
+  let shuffledDB = shuffleArray(database);
+  state.questions = [];
+  
+  for (let i = 0; i < shuffledDB.length; i++) {
+    let q = shuffledDB[i];
+    let correctText = q.choices[q.a];
+    let newChoices = shuffleArray(q.choices);
+    let newCorrectIndex = newChoices.indexOf(correctText);
+    
+    state.questions.push({
+      cat: q.cat, q: q.q, exp: q.exp, choices: newChoices, correctAnswer: newCorrectIndex
+    });
+  }
+  
+  state.answers = new Array(state.questions.length).fill(null);
+  state.checked = new Array(state.questions.length).fill(false);
+  state.current = 0;
+  state.screen = 'quiz';
+  renderApp();
+}
+
+function renderApp() {
+  const app = document.getElementById('app');
+  if (state.screen === 'login') {
+    app.innerHTML = `
+      <div class="card" style="text-align: center; padding: 40px 20px;">
+        <div style="font-size: 60px; margin-bottom: 10px;">🧪</div>
+        <h2 style="color: var(--primary-dark); margin-bottom: 10px;">ระบบเตรียมสอบ N-NET วิทยาศาสตร์ ม.ต้น</h2>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">เน้นทักษะกระบวนการคิดวิเคราะห์เชิงสมรรถนะและการประยุกต์ใช้ จำนวน 20 ข้อ</p>
+        <div class="inp-group">
+          <label class="inp-label">ชื่อ-นามสกุลผู้เข้าสอบ</label>
+          <input type="text" id="s_name" class="inp-text" placeholder="พิมพ์ชื่อและนามสกุลที่นี่">
+        </div>
+        <div class="inp-group">
+          <label class="inp-label">รหัสนักศึกษา / ศูนย์ สกร.</label>
+          <input type="text" id="s_id" class="inp-text" value="ระดับมัธยมศึกษาตอนต้น">
+        </div>
+        <button class="btn btn-primary" style="margin-top: 10px;" onclick="startApp()">เริ่มทำข้อสอบวิทยาศาสตร์ 🚀</button>
+      </div>
+    `;
+  } 
+  else if (state.screen === 'quiz') {
+    let total = state.questions.length;
+    let curr = state.current;
+    let q = state.questions[curr];
+    let ans = state.answers[curr];
+    let isChecked = state.checked[curr];
+    let pct = Math.round(((curr + 1) / total) * 100);
+    
+    let letters = ['ก', 'ข', 'ค', 'ง'];
+    let choicesHTML = '';
+    
+    for (let i = 0; i < 4; i++) {
+      let cssClass = 'choice';
+      if (isChecked) {
+        if (i === q.correctAnswer) cssClass += ' correct';
+        else if (i === ans && ans !== q.correctAnswer) cssClass += ' wrong';
+      } else {
+        if (i === ans) cssClass += ' selected';
+      }
+      choicesHTML += `<button class="${cssClass}" ${isChecked ? 'disabled' : ''} onclick="selectAnswer(${i})">
+                        <div class="c-let">${letters[i]}</div>
+                        <div>${q.choices[i]}</div>
+                      </button>`;
+    }
+    
+    let fbHTML = isChecked ? (
+      ans === q.correctAnswer 
+        ? `<div class="feedback ok">✅ <strong>คำตอบถูกต้อง!</strong><div class="fb-explain">💡 <strong>คำอธิบายหลักการ:</strong> ${q.exp}</div></div>`
+        : `<div class="feedback no">❌ <strong>ยังไม่ถูกใจ</strong> — คำตอบที่ถูกคือแถบสีเขียว<div class="fb-explain">💡 <strong>วิเคราะห์ข้อผิดพลาดและตัวลวง:</strong> ${q.exp}</div></div>`
+    ) : '';
+    
+    let btnPrev = curr > 0 ? `<button class="btn btn-secondary" onclick="goPrev()">← ข้อก่อนหน้า</button>` : `<div style="width:48%"></div>`;
+    let btnNext = isChecked ? (
+      curr === total - 1 ? `<button class="btn btn-primary" onclick="showResult()">ส่งข้อสอบและสรุปผลสมรรถนะ 🏆</button>` : `<button class="btn btn-primary" onclick="goNext()">ข้อถัดไป →</button>`
+    ) : `<button class="btn btn-primary" ${ans === null ? 'disabled' : ''} onclick="checkAnswer()">ตรวจคำตอบ ✓</button>`;
+    
+    let dotsHTML = '<div class="dot-nav">';
+    for (let i = 0; i < total; i++) {
+      let dClass = 'dot';
+      if (i === curr) dClass += ' active';
+      else if (state.checked[i]) dClass += (state.answers[i] === state.questions[i].correctAnswer) ? ' ok' : ' no';
+      dotsHTML += `<button class="${dClass}" onclick="jumpTo(${i})">${i+1}</button>`;
+    }
+    dotsHTML += '</div>';
+
+    app.innerHTML = `
+      <div class="card" style="padding: 16px 20px;">
+        <div class="prog-text"><span>ข้อที่ ${curr + 1} จาก ${total}</span><span>ความคืบหน้า ${pct}%</span></div>
+        <div class="prog-bar"><div class="prog-fill" style="width: ${pct}%"></div></div>
+      </div>
+      <div class="card">
+        <div class="q-badge">${q.cat}</div>
+        <div class="q-text">${q.q}</div>
+        <div class="choices">${choicesHTML}</div>
+        ${fbHTML}
+        <div class="nav-buttons">${btnPrev}${btnNext}</div>
+      </div>
+      ${dotsHTML}
+    `;
+  }
+  else if (state.screen === 'result') {
+    let total = state.questions.length;
+    let score = 0;
+    let catStats = {};
+    
+    for (let i = 0; i < total; i++) {
+      let q = state.questions[i];
+      if (!catStats[q.cat]) catStats[q.cat] = { total: 0, correct: 0 };
+      catStats[q.cat].total++;
+      if (state.answers[i] === q.correctAnswer) { score++; catStats[q.cat].correct++; }
+    }
+    
+    let pct = Math.round((score / total) * 100);
+    
+    let analysisHTML = '';
+    for (let cat in catStats) {
+      let cPct = Math.round((catStats[cat].correct / catStats[cat].total) * 100);
+      let isWeak = cPct < 60;
+      let tagClass = isWeak ? 'weak' : 'good';
+      let tagText = isWeak ? '⚠️ ควรเสริมความเข้าใจย้อนกลับ' : '✅ บรรลุสมรรถนะสาระย่อย';
+      
+      let advice = '';
+      if(cat === "สิ่งมีชีวิตและสิ่งแวดล้อม") advice = isWeak ? 'ยังมีจุดสับสนเรื่องโครงสร้างพืชและสัตว์ และกลไกการรักษาดุลยภาพของร่างกาย แนะนำให้ทบทวนความสัมพันธ์ในระบบนิเวศและการสะสมสารพิษเพิ่มเติม' : 'ดีมาก! เข้าใจการทำงานของระบบเซลล์ โซ่อาหาร และดุลยภาพของร่างกายอย่างลึกซึ้ง';
+      else if(cat === "สารเพื่อชีวิต") advice = isWeak ? 'พบข้อผิดพลาดในการแยกแยะสารบริสุทธิ์ออกจากสารผสม และปฏิกิริยาเคมีในชีวิตประจำวัน แนะนำให้จดจำปัจจัยการเกิดสนิมและหน้าที่ของตัวทำละลาย' : 'ยอดเยี่ยม! มีทักษะการวิเคราะห์สมบัติทางเคมี การตกตะกอน และการเปลี่ยนแปลงสถานะของสารได้แม่นยำ';
+      else if(cat === "แรงและพลังงาน") advice = isWeak ? 'สับสนระหว่างการคำนวณงานทางฟิสิกส์กับตัวแปรด้านเวลา และหลักมิติความดันสัมพัทธ์ ควรศึกษาเรื่องการเปลี่ยนรูปพลังงานกลศักย์-จลน์ซ้ำอีกครั้ง' : 'ผ่านเกณฑ์ดีเยี่ยม! ประยุกต์ใช้สูตรคำนวณพลังงาน แรงเสียดทาน และการถ่ายโอนความร้อนในสถานการณ์จริงได้ดี';
+      else if(cat === "โลกและอวกาศ") advice = isWeak ? 'มีข้อผิดพลาดเกี่ยวกับความสับสนระหว่างแก๊สเรือนกระจกกับสารทำลายโอโซน และระบบข้างขึ้นข้างแรม ทบทวนเครื่องมือวัดอุตุนิยมวิทยาเพิ่มเติม' : 'ยอดเยี่ยมมาก! เข้าใจความสัมพันธ์ของระบบดวงดาว บรรยากาศโลก ปรากฏการณ์ธรรมชาติ และการใช้เครื่องมือทางวิทยาศาสตร์อย่างถูกต้อง';
+
+      analysisHTML += `
+        <div class="analysis-item ${isWeak ? 'weak' : 'good'}">
+          <span class="analysis-tag ${tagClass}">${tagText}</span>
+          <div style="font-weight: 700; font-size: 15px; margin-bottom: 2px;">${cat}</div>
+          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">ทำถูกต้อง ${catStats[cat].correct} จาก ${catStats[cat].total} ข้อ (${cPct}%)</div>
+          <div style="font-size: 13px; line-height:1.4;">💡 <strong>ข้อแนะนำสำหรับการเรียนรู้ย้อนกลับ:</strong> ${advice}</div>
+        </div>
+      `;
+    }
+
+    let reviewHTML = '<div class="card" style="margin-top:20px"><div style="font-weight:700; margin-bottom:12px;">📋 รายงานสรุปเฉลยและการตอบรายข้อ</div>';
+    for (let i = 0; i < total; i++) {
+      let q = state.questions[i];
+      let isCorr = (state.answers[i] === q.correctAnswer);
+      reviewHTML += `
+        <div class="review-item">
+          <div class="r-q"><span class="ri-tick ${isCorr?'ok':'no'}">${isCorr?'✓':'✗'}</span> ข้อ ${i+1}: ${q.q}</div>
+          <div class="r-a" style="color:var(--text-muted)">คำตอบของคุณ: ${state.answers[i] !== null ? q.choices[state.answers[i]] : 'ไม่ได้ระบุคำตอบ'}</div>
+          <div class="r-a" style="color:var(--green); font-weight:600;">คำตอบที่ถูกต้อง: ${q.choices[q.correctAnswer]}</div>
+        </div>
+      `;
+    }
+    reviewHTML += '</div>';
+
+    app.innerHTML = `
+      <div class="card" style="text-align:center; padding:32px 20px;">
+        <h3 style="color:var(--primary-dark); margin-bottom:6px;">รายงานผลการประเมินสมรรถนะผู้เรียนรายบุคคล</h3>
+        <div style="font-size:18px; font-weight:700;">คุณ ${state.studentName}</div>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:24px;">ระดับ: ${state.studentId}</div>
+        
+        <div style="font-size:56px; font-weight:800; color:var(--primary-dark); line-height:1;">${score}</div>
+        <div style="font-size:14px; color:var(--text-muted); margin-bottom:20px;">คะแนนที่ทำได้ (จากทั้งหมด ${total} ข้อ)</div>
+        
+        <div class="grid-stats">
+          <div class="stat-box"><div class="stat-num green">${score}</div><div style="font-size:12px;color:var(--text-muted)">ตอบถูก (ข้อ)</div></div>
+          <div class="stat-box"><div class="stat-num red">${total - score}</div><div style="font-size:12px;color:var(--text-muted)">ตอบผิด (ข้อ)</div></div>
+          <div class="stat-box"><div class="stat-num blue">${pct}%</div><div style="font-size:12px;color:var(--text-muted)">สัดส่วนความแม่นยำ</div></div>
+        </div>
+      </div>
+
+      <div class="analysis-card">
+        <div class="analysis-header">📊 รายงานวิเคราะห์สมรรถนะวิทยาศาสตร์รายสาระ</div>
+        ${analysisHTML}
+      </div>
+      
+      <button class="btn btn-primary" onclick="location.reload()">🔄 สุ่มสลับลำดับข้อสอบเพื่อเริ่มทำใหม่</button>
+      ${reviewHTML}
+    `;
+  }
+}
+
+function selectAnswer(index) { if (state.checked[state.current]) return; state.answers[state.current] = index; renderApp(); }
+function checkAnswer() { if (state.answers[state.current] === null) return; state.checked[state.current] = true; renderApp(); }
+function goNext() { if (state.current < state.questions.length - 1) { state.current++; renderApp(); } }
+function goPrev() { if (state.current > 0) { state.current--; renderApp(); } }
+function jumpTo(index) { state.current = index; renderApp(); }
+function showResult() { state.screen = 'result'; renderApp(); }
+
+renderApp();
+</script>
+</body>
+</html>
