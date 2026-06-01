@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบทดสอบ N-NET วิทยาศาสตร์ ระดับมัธยมศึกษาตอนต้น (ชุดที่ 5)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #1e40af; 
+    --primary-dark: #1e3a8a;
+    --primary-light: #eff6ff;
+    --green: #15803d; --green-light: #f0fdf4; --green-mid: #bbf7d0;
+    --red: #b91c1c; --red-light: #fef2f2; --red-mid: #fecaca;
+    --amber-light: #fffbeb; --amber: #d97706;
+    --gray-bg: #f1f5f9; --gray-card: #ffffff; --gray-border: #cbd5e1;
+    --text: #0f172a; --text-muted: #64748b;
+  }
+  body { font-family: 'Sarabun', sans-serif; background: var(--gray-bg); color: var(--text); padding: 16px 8px; line-height: 1.6; }
+  .container { max-width: 650px; margin: 0 auto; padding-bottom: 60px; }
+  
+  .header-card { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 26px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center; }
+  .header-card h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .header-card p { font-size: 14px; opacity: 0.9; }
+
+  .card { background: var(--gray-card); border: 1px solid var(--gray-border); border-radius: 16px; padding: 24px; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.05); }
+  
+  .emoji-banner { font-size: 48px; text-align: center; margin-bottom: 16px; margin-top: 8px; animation: bounce 2s infinite; }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .form-group { margin-bottom: 16px; text-align: left; }
+  .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+  .form-control { width: 100%; padding: 12px 14px; border: 1px solid var(--gray-border); border-radius: 10px; font-family: 'Sarabun', sans-serif; font-size: 15px; transition: all 0.2s; }
+  .form-control:focus { outline: none; border-color: var(--primary); background-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.15); }
+  
+  .progress-container { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; font-size: 14px; color: var(--text-muted); font-weight: 500; }
+  .progress-bar-bg { background: #e2e8f0; height: 8px; border-radius: 4px; flex-grow: 1; margin: 0 12px; position: relative; overflow: hidden; }
+  .progress-bar-fill { background: var(--primary); height: 100%; width: 0%; transition: width 0.3s ease; }
+
+  .question-text { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: var(--text); white-space: pre-line; background: #fdfdfd; padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary); }
+  .hint-box { background: var(--amber-light); border-left: 4px solid var(--amber); padding: 12px 16px; border-radius: 4px 8px 8px 4px; margin-bottom: 20px; font-size: 14px; color: var(--amber); }
+
+  .options-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .option-item { display: flex; align-items: flex-start; padding: 14px 16px; border: 1px solid var(--gray-border); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; background: white; font-size: 15px; }
+  .option-item:hover { border-color: #94a3b8; background: #f8fafc; }
+  .option-item.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary-dark); font-weight: 500; }
+  
+  .option-item.correct-reveal { border-color: var(--green-mid); background: var(--green-light); color: var(--green); font-weight: 500; }
+  .option-item.wrong-reveal { border-color: var(--red-mid); background: var(--red-light); color: var(--red); }
+  .option-item.disabled { cursor: not-allowed; pointer-events: none; }
+
+  .radio-dot { height: 18px; min-width: 18px; border: 2px solid #cbd5e1; border-radius: 50%; margin-right: 12px; margin-top: 2px; position: relative; display: inline-block; }
+  .option-item.selected .radio-dot { border-color: var(--primary); }
+  .option-item.selected .radio-dot::after { content: ''; position: absolute; width: 10px; height: 10px; background: var(--primary); border-radius: 50%; top: 2px; left: 2px; }
+  .option-item.correct-reveal .radio-dot { border-color: var(--green); }
+  .option-item.correct-reveal .radio-dot::after { content: '✓'; color: var(--green); font-size: 12px; font-weight: bold; position: absolute; top: -4px; left: 2px; }
+  .option-item.wrong-reveal .radio-dot { border-color: var(--red); }
+  .option-item.wrong-reveal .radio-dot::after { content: '✕'; color: var(--red); font-size: 12px; font-weight: bold; position: absolute; top: -4px; left: 2px; }
+
+  .rationale-box { padding: 14px 16px; border-radius: 10px; font-size: 14px; margin-bottom: 20px; animation: fadeIn 0.3s ease; }
+  .rationale-box.correct { background: var(--green-light); border: 1px dashed var(--green-mid); color: var(--green); }
+  .rationale-box.wrong { background: var(--red-light); border: 1px dashed var(--red-mid); color: var(--red); }
+
+  .nav-actions { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; }
+  .btn { flex: 1; padding: 12px 16px; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; text-decoration: none; }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-primary:disabled { background: #cbd5e1; color: #94a3b8; cursor: not-allowed; }
+  .btn-secondary { background: #e2e8f0; color: var(--text); }
+  .btn-secondary:hover { background: #cbd5e1; }
+  .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .summary-card { text-align: center; padding: 32px 24px; border: 2px solid var(--primary) !important; }
+  .student-info-box { background: #eff6ff; border: 1px dashed var(--primary); padding: 16px; border-radius: 12px; margin: 16px 0; text-align: left; }
+  .student-info-box p { font-size: 14px; margin-bottom: 4px; color: var(--text); }
+  .student-info-box p b { color: var(--primary); }
+  
+  .grade-pill { display: inline-block; padding: 6px 18px; border-radius: 20px; font-weight: 700; font-size: 16px; margin: 8px 0; }
+  .grade-pass { background: var(--green-light); color: var(--green); border: 1px solid var(--green-mid); }
+  .grade-fail { background: var(--red-light); color: var(--red); border: 1px solid var(--red-mid); }
+  
+  .grid-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; }
+  .stat-box { background: #f8fafc; border: 1px solid var(--gray-border); padding: 12px; border-radius: 10px; text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 700; }
+  .slbl { font-size: 12px; color: var(--text-muted); }
+
+  .review-title { font-size: 16px; font-weight: 700; margin-bottom: 14px; text-align: left; border-bottom: 2px solid var(--primary); padding-bottom: 6px; color: var(--primary); }
+  .review-item { text-align: left; padding: 16px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+  .review-item:last-child { border-bottom: none; }
+  
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-card">
+    <h1>สกร.โนนสัง ระดับมัธยมศึกษาตอนต้น — แบบทดสอบ N-NET</h1>
+    <p>วิชาวิทยาศาสตร์และกระบวนการคิดหาเหตุผล (ชุดที่ 5: ระดับท้าทายการประยุกต์ใช้)</p>
+  </div>
+
+  <div id="quiz-app"></div>
+</div>
+
+<script>
+const quizData = {
+  "questions": [
+    {
+      "question": "เมื่อนำพืชชนิดหนึ่งไปวางไว้ในที่มืดเป็นเวลา 24 ชั่วโมง แล้วนำใบมาทำการทดสอบหาแป้งด้วยสารละลายไอโอดีน ผลการทดสอบจะไม่พบการเปลี่ยนแปลงเป็นสีน้ำเงิน ข้อมูลนี้สามารถสรุปสาระสำคัญเกี่ยวกับกระบวนการของพืชได้อย่างไร?",
+      "answerOptions": [
+        { "text": "แสงเป็นปัจจัยสำคัญที่จำเป็นในกระบวนการสังเคราะห์ด้วยแสงเพื่อสร้างอาหาร", "rationale": "ถูกต้อง! เพราะเมื่อขาดแสง พืชจะไม่สามารถสังเคราะห์ด้วยแสงเพื่อสร้างน้ำตาลและเปลี่ยนเป็นแป้งสะสมไว้ได้", "isCorrect": true },
+        { "text": "พืชสามารถหายใจและสลายแป้งให้หมดไปได้อย่างสมบูรณ์ในที่มืด", "rationale": "ตัวลวงสับสน พืชมีการหายใจตลอดเวลาจริง แต่การทดสอบนี้มุ่งเน้นพิสูจน์ความจำเป็นของแสงต่อการสร้างอาหาร", "isCorrect": false },
+        { "text": "สารละลายไอโอดีนจะเสื่อมประสิทธิภาพเมื่อทำปฏิกิริยากับใบพืชที่ขาดน้ำ", "rationale": "ตัวลวงภายนอกที่ไม่มีความเชื่อมโยงเชิงวิทยาศาสตร์กับเงื่อนไขของโจทย์", "isCorrect": false },
+        { "text": "คลอโรฟิลล์ในใบพืชจะถูกทำลายทั้งหมดหากไม่ได้รับแสงแดดเป็นเวลา 24 ชั่วโมง", "rationale": "ตัวลวงเกินจริง คลอโรฟิลล์ไม่ได้สลายตัวหมดไปในเวลาเพียงหนึ่งวัน ใบพืชยังคงเขียวอยู่", "isCorrect": false }
+      ],
+      "hint": "พิจารณาว่ากระบวนการใดของพืชที่ต้องใช้ 'แสง' เป็นตัวกระตุ้นปฏิกิริยา และผลผลิตแรกที่ได้คืออะไร"
+    },
+    {
+      "question": "ชาวบ้านสังเกตว่าแกงกะทิที่อุ่นให้เดือดพล่านตักใส่ชามตั้งทิ้งไว้จะบูดเสียช้ากว่าแกงกะทิที่ตักแบ่งกินโดยไม่ได้อุ่น เหตุใดการอุ่นให้ร้อนจัดจึงช่วยยืดอายุอาหารได้ดีที่สุดตามหลักวิทยาศาสตร์?",
+      "answerOptions": [
+        { "text": "ความร้อนทำลายโครงสร้างและยับยั้งการเจริญเติบโตของจุลินทรีย์และเอนไซม์", "rationale": "ถูกต้อง! การเพิ่มอุณหภูมิส่งผลให้โปรตีนในจุลินทรีย์แปลงสภาพ ทำให้ไม่สามารถเจริญเติบโตและย่อยสลายอาหารได้", "isCorrect": true },
+        { "text": "ความร้อนไล่แก๊สออกซิเจนออกจากน้ำแกงจนหมด ทำให้แบคทีเรียหายใจไม่ได้", "rationale": "ตัวลวงยอดฮิต แก๊สออกซิเจนลดลงชั่วคราวขณะเดือด แต่เมื่อตั้งทิ้งไว้ออกซิเจนในอากาศก็กลับละลายลงไปใหม่ได้", "isCorrect": false },
+        { "text": "กะทิเกิดปฏิกิริยาเคมีเปลี่ยนสภาพเป็นสารกันบูดธรรมชาติเมื่ออุณหภูมิสูงกว่า 100 องศาเซลเซียส", "rationale": "ตัวลวงมโนทัศน์คลาดเคลื่อน ไม่มีสารกันบูดธรรมชาติเกิดขึ้นจากการต้มกะทิ", "isCorrect": false },
+        { "text": "ความร้อนช่วยเพิ่มความเป็นกรดให้กับอาหาร ส่งผลให้สิ่งมีชีวิตขนาดเล็กตาย", "rationale": "ตัวลวงผิดหลักความเป็นจริง การต้มไม่ได้เพิ่มความเป็นกรดอย่างมีนัยสำคัญจนฆ่าเชื้อได้", "isCorrect": false }
+      ],
+      "hint": "มองในแง่ของปัจจัยที่มีผลต่อการทำงานและการอยู่รอดของแบคทีเรียหรือเชื้อราที่ทำให้อาหารบูดเสีย"
+    },
+    {
+      "question": "หากนำเซลล์ว่านหางจระเข้ไปแช่ในสารละลายเกลือแกงที่มีความเข้มข้นสูงมาก (Hypertonic solution) จะเกิดการเปลี่ยนแปลงใดกับเซลล์ และเกิดจากกระบวนการใด?",
+      "answerOptions": [
+        { "text": "เซลล์จะเหี่ยวเนื่องจากน้ำออสโมซิสออกจากเซลล์", "rationale": "ถูกต้อง! น้ำภายในเซลล์มีความเข้มข้นน้อยกว่าภายนอก น้ำจึงเคลื่อนที่ออกจากเซลล์สู่ภายนอกทำให้เซลล์เหี่ยว", "isCorrect": true },
+        { "text": "เซลล์จะเต่งและแตกเนื่องจากเกลือแพร่เข้าสู่เซลล์อย่างรวดเร็ว", "rationale": "ตัวลวงสับสนระหว่างการแพร่ของตัวละลายและการออสโมซิสของน้ำ และผนังเซลล์พืชช่วยป้องกันไม่ให้เซลล์แตกง่าย", "isCorrect": false },
+        { "text": "เซลล์ไม่มีการเปลี่ยนแปลงเนื่องจากมีผนังเซลล์ที่แข็งแรงคอยกั้นเกลือไว้", "rationale": "ตัวลวงคลาดเคลื่อน ผนังเซลล์ยอมให้สารส่วนใหญ่ผ่านได้ และไม่สามารถกั้นการเคลื่อนที่ของน้ำได้", "isCorrect": false },
+        { "text": "เซลล์จะขยายขนาดขึ้นเนื่องจากไอออนของโซเดียมดึงน้ำเข้าสู่สารละลายภายในเซลล์", "rationale": "ตัวลวงกลับทิศทางวิทยาศาสตร์ สารละลายเข้มข้นสูงภายนอกต้องดึงน้ำออกจากเซลล์ไม่ใช่ดึงเข้า", "isCorrect": false }
+      ],
+      "hint": "น้ำจะเคลื่อนที่จากบริเวณที่มีความเข้มข้นของสารละลาย 'ต่ำ' (น้ำมาก) ไปยังบริเวณที่มีความเข้มข้น 'สูง' (น้ำน้อย)"
+    },
+    {
+      "question": "ในการจำแนกสารบริสุทธิ์และสารผสมออกจากกัน หากมีสารของเหลวใสไม่มีสี 2 ชนิด วิธีการใดในห้องปฏิบัติการที่สามารถยืนยันได้อย่างถูกต้องและแม่นยำที่สุดว่าสารใดเป็นสารบริสุทธิ์?",
+      "answerOptions": [
+        { "text": "นำไปต้มเพื่อหาช่วงอุณหภูมิของจุดเดือดที่คงที่", "rationale": "ถูกต้อง! สารบริสุทธิ์จะมีจุดเดือดคงที่ที่ความดันหนึ่งๆ ส่วนสารผสมจุดเดือดจะค่อยๆ เพิ่มขึ้นไม่คงที่", "isCorrect": true },
+        { "text": "นำไปทดสอบด้วยกระดาษลิตมัสเพื่อดูความเป็นกรด-เบส", "rationale": "ตัวลวงไม่ตรงประเด็น ทั้งสารบริสุทธิ์ (เช่น น้ำ) และสารผสม (เช่น น้ำเกลือ) ต่างก็มีฤทธิ์เป็นกลางได้เช่นกัน", "isCorrect": false },
+        { "text": "สังเกตการตกตะกอนเมื่อตั้งทิ้งไว้ในตู้เย็นเป็นเวลา 48 ชั่วโมง", "rationale": "ตัวลวงจำกัด สารผสมที่เป็นสารละลายเนื้อเดียว (เช่น น้ำเชื่อม) จะไม่ตกตะกอนเมื่อแช่เย็น", "isCorrect": false },
+        { "text": "ชั่งน้ำหนักหาความหนาแน่นด้วยตาชั่งดิจิทัลเพียงอย่างเดียว", "rationale": "ตัวลวงไม่เพียงพอ ความหนาแน่นบอกค่าเฉพาะตัวได้ แต่หากไม่ทราบชนิดสารล่วงหน้าจะไม่สามารถตัดสินว่าเป็นสารผสมได้เลย", "isCorrect": false }
+      ],
+      "hint": "สารบริสุทธิ์มีสมบัติทางกายภาพบางประการที่ 'คงที่' เสมอ ต่างจากสารผสมที่มีสัดส่วนไม่แน่นอน"
+    },
+    {
+      "question": "เด็กชายเอต้องการต่อวงจรไฟฟ้าเพื่อใช้ในของเล่นชิ้นใหม่ โดยต้องการให้หลอดไฟสว่างเท่ากันทุกดวง และหากหลอดไฟดวงหนึ่งขาด ดวงที่เหลือยังคงต้องสว่างอยู่ เขาควรเลือกต่อวงจรแบบใดและเพราะเหตุใด?",
+      "answerOptions": [
+        { "text": "ต่อแบบขนาน เพราะกระแสไฟฟ้ามีทางเดินแยกกัน และความต่างศักย์ไฟฟ้าตกคร่อมแต่ละหลอดจะเท่ากัน", "rationale": "ถูกต้อง! การต่อแบบขนานทำให้เครื่องใช้ไฟฟ้าแต่ละชิ้นทำงานอิสระต่อกัน และได้รับแรงดันไฟฟ้าเต็มที่เท่ากัน", "isCorrect": true },
+        { "text": "ต่อแบบอนุกรม เพราะกระแสไฟฟ้าจะไหลผ่านหลอดไฟทุกดวงพร้อมกันทำให้ประหยัดพลังงาน", "rationale": "ตัวลวงผิดเงื่อนไข การต่ออนุกรมถ้าหลอดหนึ่งขาด วงจรจะเปิดทันทีและหลอดที่เหลือจะดับหมด", "isCorrect": false },
+        { "text": "ต่อแบบผสม โดยเน้นการต่อตัวต้านทานขนาดใหญ่เพื่อควบคุมแรงดันไม่ให้หลอดไฟขาด", "rationale": "ตัวลวงเบี่ยงเบน การเพิ่มตัวต้านทานขนาดใหญ่จะทำให้หลอดไฟสว่างลดลง ไม่ตรงตามที่โจทย์ต้องการ", "isCorrect": false },
+        { "text": "ต่อแบบอนุกรมแล้วสลับขั้วแบตเตอรี่บ่อยๆ เพื่อกระจายแรงดันไฟฟ้าให้สม่ำเสมอ", "rationale": "ตัวลวงไร้เหตุผลวิทยาศาสตร์ การสลับขั้วแบตเตอรี่กระแสตรงไม่มีผลช่วยให้หลอดไฟสว่างค้างอยู่ได้หากวงจรขาด", "isCorrect": false }
+      ],
+      "hint": "ลองคิดถึงระบบไฟฟ้าที่ใช้ในบ้านเรือนทั่วไป หากเปิดไฟห้องน้ำแล้วไฟห้องนอนไม่ดับ แสดงว่าเป็นวงจรแบบใด"
+    },
+    {
+      "question": "ในคืนที่ท้องฟ้ามืดสนิทและมองเห็นดวงดาวชัดเจน นักศึกษา สกร. สังเกตเห็นดาวดวงหนึ่งส่องแสงระยิบระยับตลอดเวลา ขณะที่ดาวอีกดวงส่งแสงนิ่งสงบ ข้อใดสรุปชนิดของดวงดาวทั้งสองได้ถูกต้องตามหลักดาราศาสตร์?",
+      "answerOptions": [
+        { "text": "ดวงที่แสงระยิบระยับคือดาวฤกษ์ ส่วนดวงที่แสงนิ่งคือดาวเคราะห์", "rationale": "ถูกต้อง! ดาวฤกษ์เป็นจุดแสงขนาดเล็กที่อยู่ไกลมาก แสงจึงหักเหตามชั้นบรรยากาศที่แปรปรวน ส่วนดาวเคราะห์อยู่ใกล้และเห็นเป็นดวงผิวหน้ากว้างแสงจึงดูนิ่งกว่า", "isCorrect": true },
+        { "text": "ดวงที่แสงระยิบระยับคือดาวเคราะห์ที่กำลังสะท้อนแสงอาทิตย์ ส่วนดวงที่แสงนิ่งคือดาวหาง", "rationale": "ตัวลวงสลับความคิด ดาวเคราะห์จะให้แสงนิ่ง ส่วนดาวหางจะเห็นเป็นฝ้าหรือมีหางยาวไม่ระยิบระยับแบบนั้น", "isCorrect": false },
+        { "text": "ดวงที่แสงระยิบระยับอยู่ใกล้โลกมากกว่าดวงที่แสงนิ่งสงบ", "rationale": "ตัวลวงกลับความจริง ดาวฤกษ์ที่ระยิบระยับอยู่ไกลจากโลกมากกว่าดาวเคราะห์ในระบบสุริยะเป็นอย่างมาก", "isCorrect": false },
+        { "text": "แสงระยิบระยับเกิดจากดาวดวงนั้นมีอัตราการหมุนรอบตัวเองที่เร็วกว่าดาวดวงที่แสงนิ่ง", "rationale": "ตัวลวงสร้างทฤษฎีปลอม การระยิบระยับเป็นผลมาจากชั้นบรรยากาศของโลก ไม่ใช่ความเร็วการหมุนของดาว", "isCorrect": false }
+      ],
+      "hint": "ความแตกต่างของระยะทางจากโลกถึงตัวดาว และลักษณะแหล่งกำเนิดแสงในตัวเอง เป็นปัจจัยสำคัญในการมองเห็น"
+    },
+    {
+      "question": "ระบบย่อยอาหารของมนุษย์มีการทำงานร่วมกันอย่างเป็นระบบ หากบุคคลหนึ่งตรวจพบว่าร่างกายมีปัญหาในการย่อยสารอาหารประเภทไขมันอย่างรุนแรง แต่อวัยวะในทางเดินอาหารส่วนอื่นปกติ อวัยวะใดที่มีแนวโน้มบกพร่องในการทำงานมากที่สุด?",
+      "answerOptions": [
+        { "text": "ตับ บกพร่องในการผลิตน้ำดี", "rationale": "ถูกต้อง! ตับทำหน้าที่ผลิตน้ำดีและส่งไปเก็บที่ถุงน้ำดี เพื่อช่วยทำให้ไขมันแตกตัวเป็นละอองขนาดเล็กก่อนที่เอนไซม์จะย่อย", "isCorrect": true },
+        { "text": "กระเพาะอาหาร บกพร่องในการหลั่งกรดไฮโดรคลอริก", "rationale": "ตัวลวงคลาดเคลื่อน กระเพาะอาหารทำหน้าที่ย่อยโปรตีนเป็นหลัก ไม่ได้ย่อยไขมัน", "isCorrect": false },
+        { "text": "ลำไส้ใหญ่ บกพร่องในการดูดซึมสารอาหารกลับคืน", "rationale": "ตัวลวงหน้าที่ ลำไส้ใหญ่ไม่มีหน้าที่ย่อยอาหาร มีหน้าที่หลักคือดูดซึมน้ำและเกลือแร่จากกากอาหาร", "isCorrect": false },
+        { "text": "ต่อมน้ำลาย บกพร่องในการผลิตเอนไซม์อะไมเลส", "rationale": "ตัวลวงต้นทาง เอนไซม์อะไมเลสย่อยสารอาหารประเภทคาร์โบไฮเดรต (แป้ง) เท่านั้น", "isCorrect": false }
+      ],
+      "hint": "สารใดในร่างกายที่ไม่ได้จัดเป็นเอนไซม์ แต่จำเป็นอย่างยิ่งในการช่วยให้ไขมันแตกตัวเป็นโมเลกุลเล็กๆ และสารนั้นสร้างมาจากที่ใด"
+    },
+    {
+      "question": "ชาวนาคนหนึ่งสังเกตว่า ดินในนาของเขามีลักษณะเหนียวจัด น้ำขังนานปานกลาง แต่อากาศถ่ายเทได้ไม่ดี เมื่อแห้งจะแตกระแหงเป็นร่องลึก หากต้องการปรับปรุงโครงสร้างดินนี้ให้เหมาะแก่การปลูกพืชไร่ทั่วไป ควรเลือกเติมสิ่งใดเหมาะสมที่สุด?",
+      "answerOptions": [
+        { "text": "อินทรียวัตถุ (ปุ๋ยหมัก ปุ๋ยคอก) ร่วมกับการผสมทรายหยาบเพื่อเพิ่มช่องว่างในดิน", "rationale": "ถูกต้อง! อินทรียวัตถุและทรายจะช่วยเพิ่มช่องว่างระหว่างอนุภาคดินเหนียว ทำให้ระบายน้ำและอากาศได้ดีขึ้น", "isCorrect": true },
+        { "text": "ปูนขาว (แคลเซียมไฮดรอกไซด์) ปริมาณมากเพื่อจับตัวกับอนุภาคดินเหนียวให้แน่นขึ้น", "rationale": "ตัวลวงอันตราย ปูนขาวใช้แก้ดินกรด และการทำให้ดินเหนียวแน่นขึ้นจะยิ่งลดการระบายอากาศและน้ำ", "isCorrect": false },
+        { "text": "ปุ๋ยเคมีสูตรไนโตรเจนสูงเพื่อเร่งการสลายอนุภาคของแร่ดินเหนียว", "rationale": "ตัวลวงความรู้ ปุ๋ยเคมีให้ธาตุอาหารแก่พืช แต่ไม่ช่วยปรับปรุงโครงสร้างกายภาพของเนื้อดินเหนียวให้ร่วนซุยขึ้นได้", "isCorrect": false },
+        { "text": "น้ำหมักชีวภาพที่มีความเป็นกรดรุนแรงเพื่อกัดกร่อนชั้นดินให้ยุ่ยตัว", "rationale": "ตัวลวงทำลายล้าง กรดรุนแรงจะทำลายสิ่งมีชีวิตในดินและโครงสร้างดินจนเสียหายมากกว่าดี", "isCorrect": false }
+      ],
+      "hint": "การปรับปรุงโครงสร้างของ 'ดินเหนียวเหนอะหนะ' ต้องใช้วัสดุที่เข้าไปแทรกเพื่อเพิ่มความร่วนซุยและการระบายอากาศ"
+    },
+    {
+      "question": "ข้อใดอธิบายปฏิกิริยาเคมีประเภท 'การเกิดสนิมเหล็ก' ได้ถูกต้องสมบูรณ์ที่สุดตามหลักวิทยาศาสตร์?",
+      "answerOptions": [
+        { "text": "เหล็กทำปฏิกิริยากับแก๊สออกซิเจนและน้ำในอากาศ เกิดเป็นสารประกอบออกไซด์ของเหล็ก", "rationale": "ถูกต้อง! สนิมเหล็ก (Iron oxide) ต้องอาศัยทั้งแก๊สออกซิเจนและความชื้น (น้ำ) ในการเกิดปฏิกิริยาเคมีร่วมกัน", "isCorrect": true },
+        { "text": "เหล็กได้รับความร้อนจากแสงแดดจัดจนหลอมละลายรวมตัวกับฝุ่นละอองในบรรยากาศ", "rationale": "ตัวลวงกายภาพ แสงแดดปกติไม่สามารถหลอมละลายเหล็กได้ และสนิมไม่ใช่ฝุ่นละอองเกาะผิว", "isCorrect": false },
+        { "text": "เหล็กทำปฏิกิริยากับแก๊สคาร์บอนไดออกไซด์ในสภาวะที่ไม่มีความชื้น", "rationale": "ตัวลวงสลับแก๊ส สนิมเหล็กไม่ได้ใช้แก๊สคาร์บอนไดออกไซด์เป็นสารตั้งต้นหลัก และจำเป็นต้องมีความชื้น", "isCorrect": false },
+        { "text": "เหล็กเกิดการสูญเสียอิเล็กตรอนให้กับไนโตรเจนเหลวที่ปนเปื้อนในน้ำฝน", "rationale": "ตัวลวงคำศัพท์วิทย์ ไนโตรเจนเหลวไม่มีอยู่ในน้ำฝนตามธรรมชาติและไม่เกี่ยวกับการเกิดสนิมเหล็กปกติ", "isCorrect": false }
+      ],
+      "hint": "ปัจจัย 2 สิ่งในธรรมชาติที่เมื่อสัมผัสกับผิวเหล็กพร้อมๆ กันเป็นเวลานาน จะทำให้เหล็กผุกร่อนและเปลี่ยนสีเป็นสีน้ำตาลแดง"
+    },
+    {
+      "question": "เมื่อเราออกแรงผลักกล่องไม้หนัก 50 กิโลกรัม ที่วางอยู่บนพื้นปูนหยาบในแนวราบ แต่กล่องยังคงหยุดนิ่งไม่เคลื่อนที่ ข้อใดอธิบายเกี่ยวกับแรงเสียดทานที่เกิดขึ้นได้ถูกต้อง?",
+      "answerOptions": [
+        { "text": "เกิดแรงเสียดทานสถิตที่มีขนาดเท่ากับแรงที่เราผลัก แต่มีทิศทางตรงกันข้าม", "rationale": "ถูกต้อง! ตราบใดที่วัตถุยังไม่เคลื่อนที่ แรงเสียดทานสถิตจะมีขนาดเท่ากับแรงพยายามผลักเสมอเพื่อให้แรงลัพธ์เป็นศูนย์", "isCorrect": true },
+        { "text": "เกิดแรงเสียดทานจลน์ที่มีขนาดมากกว่าแรงที่เราผลัก จึงดันให้กล่องต้านมือเราไว้", "rationale": "ตัวลวงทฤษฎี แรงเสียดทานจลน์จะเกิดขึ้นเฉพาะเมื่อวัตถุกำลังเคลื่อนที่เท่านั้น", "isCorrect": false },
+        { "text": "ไม่มีแรงเสียดทานเกิดขึ้นเนื่องจากวัตถุยังไม่มีการเคลื่อนที่หรือเปลี่ยนตำแหน่ง", "rationale": "ตัวลวงมโนทัศน์ผิดพลาด หากไม่มีแรงเสียดทาน วัตถุก็ต้องเคลื่อนที่ตามแรงผลักทันทีแม้จะออกแรงน้อยก็ตาม", "isCorrect": false },
+        { "text": "แรงเสียดทานสถิตมีค่าเป็นศูนย์ และน้ำหนักของกล่องกลายเป็นแรงต้านในแนวราบแทน", "rationale": "ตัวลวงสับสนทิศทาง น้ำหนักของวัตถุมีทิศทางดิ่งลงสู่จุดศูนย์กลางโลก ไม่ใช่แรงต้านในแนวราบโดยตรง", "isCorrect": false }
+      ],
+      "hint": "ทบทวนเรื่องกฎการเคลื่อนที่ข้อที่หนึ่งของนิวตัน วัตถุหยุดนิ่งแสดงว่าแรงลัพธ์ที่กระทำต่อวัตถุต้องเป็นเท่าใด"
+    },
+    {
+      "question": "ปรากฏการณ์เรือนกระจก (Greenhouse Effect) มีความสำคัญต่อสิ่งมีชีวิตบนโลกอย่างไร และแก๊สใดที่มีส่วนสนับสนุนปฏิกิริยานี้มากที่สุดจากกิจกรรมการเผาไหม้เชื้อเพลิงฟอสซิลของมนุษย์?",
+      "answerOptions": [
+        { "text": "ช่วยรักษาอุณหภูมิเฉลี่ยของโลกให้เหมาะสมต่อการดำรงชีวิต; แก๊สคาร์บอนไดออกไซด์", "rationale": "ถูกต้อง! ปรากฏการณ์เรือนกระจกช่วยกักเก็บความร้อนไม่ให้โลกเย็นจัดในเวลากลางคืน และแก๊สหลักจากกิจกรรมมนุษย์คือ $CO_2$", "isCorrect": true },
+        { "text": "ช่วยกรองรังสีอัลตราไวโอเลตจากดวงอาทิตย์ไม่ให้ทำลายผิวหนัง; แก๊สโอโซน", "rationale": "ตัวลวงหน้าที่ ชั้นโอโซนช่วยกรองรังสี UV แต่ไม่ใช่กลไกหลักของปรากฏการณ์เรือนกระจกที่กักเก็บรังสีความร้อน (อินฟราเรด)", "isCorrect": false },
+        { "text": "ช่วยเพิ่มแก๊สออกซิเจนในบรรยากาศผ่านชั้นบรรยากาศไอโอโนสเฟียร์; แก๊สซัลเฟอร์ไดออกไซด์", "rationale": "ตัวลวงแต่งคำมั่ว ซัลเฟอร์ไดออกไซด์เป็นแก๊สพิษที่ทำให้เกิดฝนกรด ไม่ใช่แก๊สเรือนกระจกหลักที่ช่วยเพิ่มออกซิเจน", "isCorrect": false },
+        { "text": "ทำให้เกิดลมมรสุมพัดพาน้ำฝนเข้าสู่พื้นที่การเกษตรได้อย่างสม่ำเสมอ; แก๊สไนตรัสออกไซด์", "rationale": "ตัวลวงโยงความสัมพันธ์คลาดเคลื่อน ลมมรสุมเกิดจากความแตกต่างของอุณหภูมิระหว่างพื้นดินและพื้นน้ำ ไม่ใช่ผลโดยตรงของแก๊สนี้", "isCorrect": false }
+      ],
+      "hint": "แยกแยะระหว่าง 'การรักษาความอบอุ่นของโลก' กับ 'การกรองรังสีอันตราย' และคิดถึงแก๊สที่เป็นเขม่าควันจากการเผาไหม้"
+    },
+    {
+      "question": "เหตุใดเมื่อเรายืนอยู่ริมชานชาลาสถานีรถไฟไฟฟ้า ขณะที่รถไฟแล่นผ่านด้วยความเร็วสูง เราจึงรู้สึกเหมือนมีแรงดึงดูดรุนแรงให้ตัวเราเซเอียงเข้าไปหารถไฟขบวนนั้น?",
+      "answerOptions": [
+        { "text": "อากาศที่เคลื่อนที่เร็วระหว่างเรากับรถไฟมีความดันต่ำลง อากาศด้านหลังเราที่มีความดันสูงกว่าจึงดันตัวเราเข้าไป", "rationale": "ถูกต้อง! ตามหลักการของแบร์นูลลี ของไหลที่เคลื่อนที่เร็วจะมีความดันต่ำ อากาศรอบตัวจึงสร้างแรงดันจากบริเวณความดันสูงไปต่ำ", "isCorrect": true },
+        { "text": "รถไฟความเร็วสูงสร้างสนามแม่เหล็กไฟฟ้ากำลังแรงดึงดูดธาตุเหล็กในเม็ดเลือดแดงของเรา", "rationale": "ตัวลวงภาพยนตร์ไซไฟ แรงแม่เหล็กของรถไฟไม่ได้ส่งผลดึงดูดฮีโมโกลบินในเลือดมนุษย์จนตัวปลิวได้ขนาดนั้น", "isCorrect": false },
+        { "text": "แรงโน้มถ่วงของรถไฟเพิ่มขึ้นเป็นทวีคูณตามความเร็วในการเคลื่อนที่ตามทฤษฎีสัมพัทธภาพ", "rationale": "ตัวลวงฟิสิกส์ขั้นสูงที่นำมาอ้างผิดบริบท มวลของรถไฟปกติไม่ได้มากพอที่จะสร้างแรงโน้มถ่วงดึงดูดคนได้อย่างเห็นผล", "isCorrect": false },
+        { "text": "โมเมนตัมเชิงมุมของล้อรถไฟถ่ายเทพลังงานจลน์ผ่านคลื่นเสียงมาปะทะตัวเรา", "rationale": "ตัวลวงคำศัพท์หรู คลื่นเสียงสร้างแรงผลักสะท้อนออก ไม่ใช่แรงดูดเข้าหาแหล่งกำเนิด", "isCorrect": false }
+      ],
+      "hint": "ความสัมพันธ์ระหว่าง 'ความเร็วของกระแสลม' กับ 'ความดันอากาศ' รอบตัวมนุษย์ตามหลักกลศาสตร์ของไหล"
+    },
+    {
+      "question": "สารละลายกรดไฮโดรคลอริก (HCl) มีค่า pH เท่ากับ 2 สารละลายนี้มีความเป็นกรดมากกว่าสารละลายที่มีค่า pH เท่ากับ 4 อยู่กี่เท่าตามมาตราส่วน pH?",
+      "answerOptions": [
+        { "text": "100 เท่า", "rationale": "ถูกต้อง! มาตราส่วน pH เป็นลอการิทึมฐาน 10 (Logarithmic scale) ค่า pH ที่ลดลง 1 หน่วย หมายถึงมีความเข้มข้นของ $H^+$ เพิ่มขึ้น 10 เท่า ดังนั้น ห่างกัน 2 หน่วย คือ $10 \\times 10 = 100$ เท่า", "isCorrect": true },
+        { "text": "2 เท่า", "rationale": "ตัวลวงคณิตศาสตร์พื้นฐาน นำค่าเลข pH มาลบกันตรงๆ ($4 - 2 = 2$) ซึ่งผิดหลักการคำนวณมาตราส่วน pH", "isCorrect": false },
+        { "text": "20 เท่า", "rationale": "ตัวลวงสับสน นำส่วนต่าง 2 หน่วยไปคูณกับ 10 โดยตรง แทนที่จะเป็นการคูณเพิ่มเป็นทวีคูณเลขยกกำลัง", "isCorrect": false },
+        { "text": "1,000 เท่า", "rationale": "ตัวลวงนับศูนย์เกินกรณีคิดว่านับหน่วยละพันเท่า", "isCorrect": false }
+      ],
+      "hint": "สเกล pH ไม่ใช่สเกลเชิงเส้นตรงธรรมดา แต่ทุกๆ 1 หน่วยที่เปลี่ยนแปลงไป ความเป็นกรดจะเพิ่มขึ้นหรือลดลงเป็น '10 เท่า' เสมอ"
+    },
+    {
+      "question": "ในการทำส้มตำปูปลาร้าให้ปลอดภัยจากพยาธิใบไม้ในตับและแบคทีเรียก่อโรค ขั้นตอนวิทยาศาสตร์ชุมชนในข้อใดมีประสิทธิภาพในการทำลายโครงสร้างของตัวอ่อนพยาธิได้ดีที่สุด?",
+      "answerOptions": [
+        { "text": "ต้มน้ำปลาร้าให้เดือดจัดนานกว่า 5 นาที เพื่อให้ความร้อนทำลายโปรตีนของพยาธิ", "rationale": "ถูกต้อง! ความร้อนระดับน้ำเดือดสามารถทำให้โปรตีนที่เป็นโครงสร้างพื้นฐานของสิ่งมีชีวิตและตัวอ่อนพยาธิแปลงสภาพและตายลง", "isCorrect": true },
+        { "text": "บีบมะนาวปริมาณมากเพื่อให้กรดซิตริกที่มีค่า pH ต่ำช่วยกัดและละลายตัวพยาธิ", "rationale": "ตัวลวงความเชื่อยอดนิยม กรดในมะนาวที่ใช้ปรุงอาหารไม่เข้มข้นพอที่จะฆ่าตัวอ่อนพยาธิใบไม้ในตับที่ซ่อนในเนื้อสัตว์ได้", "isCorrect": false },
+        { "text": "ใส่พริกขี้หนูสดและกระเทียมเยอะๆ เพื่อใช้สารสกัดเผ็ดร้อนในการขับพยาธิออกจากอาหาร", "rationale": "ตัวลวงภูมิปัญญาคลาดเคลื่อน สารแคปไซซินในพริกทำให้เผ็ดร้อนแต่ไม่สามารถฆ่าเชื้อโรคหรือพยาธิในอาหารได้", "isCorrect": false },
+        { "text": "นำปูจืดไปแช่ในน้ำโซดาเย็นจัดเป็นเวลา 10 นาทีก่อนนำมาตำ", "rationale": "ตัวลวงสมัยใหม่ โซดาและความเย็นจัดเพียงสั้นๆ ไม่สามารถทำลายไข่หรือตัวอ่อนพยาธิที่ฝังในเนื้อปูได้", "isCorrect": false }
+      ],
+      "hint": "วิธีทางกายภาพที่แน่นอนที่สุดในการฆ่าสิ่งมีชีวิตหรือปรสิตปนเปื้อนในอาหารคือกระบวนการใด"
+    },
+    {
+      "question": "สารอาหารกลุ่มใดต่อไปนี้ เมื่อผ่านเข้าสู่ระบบย่อยอาหารของร่างกายมนุษย์แล้ว จะถูกส่งผ่านไปยังลำไส้เล็กโดย 'ไม่ต้องผ่านกระบวนการย่อยทางเคมีด้วยเอนไซม์' เลย สามารถดูดซึมไปใช้ได้ทันที?",
+      "answerOptions": [
+        { "text": "วิตามินซี, แร่ธาตุเหล็ก, แก๊สออกซิเจนละลายน้ำ", "rationale": "ถูกต้อง! วิตามิน แร่ธาตุ และน้ำ เป็นสารอาหารโมเลกุลเดี่ยวขนาดเล็กมาก ร่างกายสามารถดูดซึมผ่านผนังลำไส้เข้าสู่กระแสเลือดได้ทันที", "isCorrect": true },
+        { "text": "น้ำตาลทราย (ซูโครส), วิตามินเอ, โปรตีนจากไข่ขาว", "rationale": "ตัวลวงกึ่งหนึ่ง ซูโครสเป็นน้ำตาลโมเลกุลคู่และโปรตีนเป็นโมเลกุลใหญ่ ต้องย่อยทางเคมีก่อนดูดซึม", "isCorrect": false },
+        { "text": "แป้งมันสำปะหลัง, ไขมันพืช, วิตามินบี 12", "rationale": "ตัวลวงแป้งมัน แป้งและไขมันเป็นสารอาหารโมเลกุลใหญ่มาก จำเป็นต้องผ่านการย่อยด้วยเอนไซม์หลายขั้นตอน", "isCorrect": false },
+        { "text": "นมวัวสด, น้ำผึ้งธรรมชาติ, เจลาตินสำเร็จรูป", "rationale": "ตัวลวงชนิดอาหาร นมวัวประกอบด้วยน้ำตาลแลคโตสและโปรตีนเคซีน ซึ่งต้องอาศัยน้ำย่อยในการตัดสายโมเลกุลก่อน", "isCorrect": false }
+      ],
+      "hint": "มองหาตัวเลือกที่มีเฉพาะสารอาหารประเภทที่ไม่ให้พลังงานแก่ร่างกาย แต่จำเป็นต่อกลไกควบคุมชีวิตและมีขนาดเล็กอยู่แล้ว"
+    },
+    {
+      "question": "วัตถุชิ้นหนึ่งมีความมวล 60 กิโลกรัม บนพื้นโลก เมื่อนักบินอวกาศนำวัตถุชิ้นนี้ไปชั่งบนดวงจันทร์ซึ่งมีแรงโน้มถ่วงเพียง 1 ใน 6 ของโลก ค่ามวลและค่าน้ำหนักของวัตถุบนดวงจันทร์จะเป็นอย่างไร?",
+      "answerOptions": [
+        { "text": "มวลคงเดิม 60 กิโลกรัม แต่น้ำหนักจะลดลงเหลือเพียง 1 ใน 6 ของน้ำหนักบนโลก", "rationale": "ถูกต้อง! มวลคือปริมาณเนื้อสารมีค่าคงที่เสมอทุกที่ แต่น้ำหนักเกิดจากมวลคูณความเร่งจากแรงโน้มถ่วง จึงเปลี่ยนไปตามสถานที่", "isCorrect": true },
+        { "text": "ทั้งมวลและน้ำหนักจะลดลงเหลือ 10 กิโลกรัม และ 10 นิวตันตามลำดับ", "rationale": "ตัวลวงสับสนนิยาม คิดว่ามวลลดลงตามแรงโน้มถ่วงด้วย ซึ่งเป็นความเข้าใจที่ผิด", "isCorrect": false },
+        { "text": "มวลจะลดลงเหลือ 10 กิโลกรัม แต่น้ำหนักคงที่เท่าเดิมไม่เปลี่ยนแปลง", "rationale": "ตัวลวงกลับด้านสลับความเข้าใจ มวลสลับกับน้ำหนักทำให้อ่านแล้วไขว้เขว", "isCorrect": false },
+        { "text": "วัตถุจะกลายเป็นสภาพไร้มวลและไร้น้ำหนักโดยสิ้นเชิงเนื่องจากอยู่นอกบรรยากาศโลก", "rationale": "ตัวลวงอวกาศ บนดวงจันทร์ยังมีแรงโน้มถ่วงอยู่ (ไม่ใช่ศูนย์) และวัตถุไม่มีวันสูญสิ้นมวลไปเฉยๆ ได้", "isCorrect": false }
+      ],
+      "hint": "คำจำกัดความของ 'มวล' (เนื้อสาร) แตกต่างจากคำว่า 'น้ำหนัก' (แรงดึงดูดของดวงดาวกระทำต่อมวล) อย่างไร"
+    },
+    {
+      "question": "หากเกิดไฟไหม้ป่าลุกลามในชุมชนใกล้ภูเขา แก๊สพิษชนิดใดที่ไม่มีสี ไม่มีกลิ่น ซึ่งเกิดจากการเผาไหม้แบบไม่สมบูรณ์ และเป็นอันตรายอย่างยิ่งเพราะสามารถจับกับฮีโมโกลบินในเม็ดเลือดแดงได้ดีกว่าออกซิเจนหลายร้อยเท่า?",
+      "answerOptions": [
+        { "text": "แก๊สคาร์บอนมอนอกไซด์ (CO)", "rationale": "ถูกต้อง! คาร์บอนมอนอกไซด์เกิดจากการเผาไหม้คาร์บอนที่ไม่สมบูรณ์ (ขาดออกซิเจน) จับแน่นกับฮีโมโกลบินทำให้ร่างกายขาดออกซิเจนเฉียบพลัน", "isCorrect": true },
+        { "text": "แก๊สคาร์บอนไดออกไซด์ ($CO_2$)", "rationale": "ตัวลวงยอดฮิต คาร์บอนไดออกไซด์เกิดจากการเผาไหม้สมบูรณ์ แม้ทำให้สำลักควันแต่ไม่ได้เข้าไปแย่งจับฮีโมโกลบินรุนแรงแบบมอนอกไซด์", "isCorrect": false },
+        { "text": "แก๊สซัลเฟอร์ไดออกไซด์ ($SO_2$)", "rationale": "ตัวลวงกลิ่น แก๊สนี้มีกลิ่นฉุนแสบจมูกรุนแรงมาก ไม่ตรงตามเงื่อนไขที่โจทย์ระบุว่า 'ไม่มีกลิ่น'", "isCorrect": false },
+        { "text": "แก๊สไนโตรเจนไดออกไซด์ ($NO_2$)", "rationale": "ตัวลวงสี แก๊สนี้มีสีน้ำตาลส้มเห็นชัดเจนขัดกับข้อกำหนดของโจทย์ว่า 'ไม่มีสี'", "isCorrect": false }
+      ],
+      "hint": "คำสำคัญคือ 'การเผาไหม้ไม่สมบูรณ์' และลักษณะทางกายภาพที่พรางตาคือ 'ไม่มีสี ไม่มีกลิ่น' แต่อันตรายถึงชีวิต"
+    },
+    {
+      "question": "การทำนาเกลือริมทะเลใช้วิธีการแยกสารในข้อใดเป็นหลักในการสกัดผลึกเกลือโซเดียมคลอไรด์ออกจากน้ำทะเล?",
+      "answerOptions": [
+        { "text": "การระเหยแห้ง โดยอาศัยพลังงานความร้อนจากแสงแดดไล่ตัวทำละลายออกไป", "rationale": "ถูกต้อง! น้ำ (ตัวทำละลาย) จะระเหยกลายเป็นไอไปในอากาศ ทิ้งสารของแข็งที่เป็นตัวละลาย (ผลึกเกลือ) ไว้ในนา", "isCorrect": true },
+        { "text": "การกลั่นลำดับส่วน เพื่อแยกของเหลวที่มีจุดเดือดใกล้เคียงกันออกจากกัน", "rationale": "ตัวลวงวิธีสูง การกลั่นลำดับส่วนใช้แยกสารละลายของเหลวปนกัน เช่น น้ำมันดิบ ไม่ใช่วิธีทำนาเกลือ", "isCorrect": false },
+        { "text": "การตกผลึกโดยการลดอุณหภูมิของน้ำทะเลให้อยู่ในระดับติดลบอย่างรวดเร็ว", "rationale": "ตัวลวงอุณหภูมิ นาเกลือทำกลางแดดจัดอุณหภูมิสูง ไม่ได้ใช้กระบวนการแช่เยือกแข็งแยกผลึก", "isCorrect": false },
+        { "text": "โครมาโทกราฟีแบบกระดาษ โดยใช้ดินเหนียวในนาเป็นตัวดูดซับสารคงที่", "rationale": "ตัวลวงนอกกรอบ โครมาโทกราฟีใช้แยกสารปริมาณน้อยมากเพื่อการวิเคราะห์ ไม่ใช่กระบวนการผลิตเชิงอุตสาหกรรมชุมชน", "isCorrect": false }
+      ],
+      "hint": "กระบวนการธรรมชาติที่ดวงอาทิตย์แผ่ความร้อนลงบนผิวน้ำ ทำให้น้ำค่อยๆ หายไปเหลือแต่ตะกอนขาว"
+    },
+    {
+      "question": "บุคคลกลุ่มใดต่อไปนี้ที่มีโอกาสถ่ายทอดลักษณะทางพันธุกรรมที่ผิดปกติผ่านทางโครโมโซมเพศ (X-linked) เช่น โรคตาบอดสี ไปสู่ลูกชายได้มากที่สุดตามหลักการกระจายยีน?",
+      "answerOptions": [
+        { "text": "มารดาที่เป็นพาหะของโรคตาบอดสี", "rationale": "ถูกต้อง! ลูกชายได้รับโครโมโซม Y จากพ่อ และโครโมโซม X จากแม่ หากแม่เป็นพาหะ ($X^BX^b$) ลูกชายมีโอกาสได้ X ที่ผิดปกติสูงถึง 50%", "isCorrect": true },
+        { "text": "บิดาที่เป็นโรคตาบอดสีอย่างรุนแรง", "rationale": "ตัวลวงพันธุศาสตร์ บิดาจะถ่ายทอดโครโมโซม Y ให้ลูกชายเท่านั้น ลูกชายจึงไม่มีวันได้ยีนตาบอดสีจากพ่อโดยตรง", "isCorrect": false },
+        { "text": "คุณปู่ที่มีประวัติสายตาบอดสีมาตั้งแต่กำเนิด", "rationale": "ตัวลวงสายตรง ยีนจากปู่ส่งผ่านพ่อมาทาง Y (ซึ่งโครโมโซม Y ไม่มียีนตาบอดสีเกาะอยู่) จึงส่งต่อให้หลานชายฝั่งนี้ไม่ได้", "isCorrect": false },
+        { "text": "พี่สาวคนโตที่มีสายตาปกติและไม่เป็นพาหะ", "rationale": "ตัวลวงเครือญาติ พี่สาวไม่ได้เป็นผู้ส่งมอบสารพันธุกรรมในการปฏิสนธิสร้างน้องชาย", "isCorrect": false }
+      ],
+      "hint": "ลูกชายโครโมโซมคือ XY โดย Y ต้องมาจากพ่อแน่นอน แปลว่า X ตัวที่เป็นปัญหาต้องรับมาจากอวัยวะสืบพันธุ์ของใคร"
+    },
+    {
+      "question": "ในการสร้างบ้านพักอาศัยในจังหวัดที่มีแดดจัดตลอดปี หากต้องการลดการสะสมความร้อนภายในตัวบ้านโดยใช้หลักการสะท้อนและการนำความร้อน ข้อใดเป็นทางเลือกเชิงโครงสร้างวิทยาศาสตร์ประยุกต์ที่ดีที่สุด?",
+      "answerOptions": [
+        { "text": "ทาสีภายนอกบ้านด้วยสีโทนอ่อน ขาวหรือครีม และติดตั้งแผ่นฉนวนใยแก้วใต้หลังคา", "rationale": "ถูกต้อง! สีอ่อนช่วยสะท้อนรังสีความร้อนจากแดดไม่ให้ดูดซับเข้าตัวบ้าน และฉนวนใยแก้วมีค่านำความร้อนต่ำช่วยกั้นความร้อนไหลผ่านลงมา", "isCorrect": true },
+        { "text": "ทาสีภายนอกบ้านด้วยสีดำสนิทเพื่อเร่งการแผ่รังสีความร้อนออกสู่สิ่งแวดล้อมภายนอกให้เร็วที่สุด", "rationale": "ตัวลวงยอดแย่ สีดำจะดูดซับรังสีความร้อนจากดวงอาทิตย์เข้ามาสะสมในตัวบ้านมหาศาลในช่วงกลางวันทำให้บ้านร้อนจัด", "isCorrect": false },
+        { "text": "มุงหลังคาด้วยแผ่นเหล็กซิงค์หนาๆ โดยไม่มีฝ้าเพดานเพื่อให้ลมพัดพาความร้อนหนีไปได้ดี", "rationale": "ตัวลวงระบายลม เหล็กนำความร้อนได้ดีมาก หากไม่มีฝ้ากั้น ความร้อนจะแผ่รังสีลงสู่ห้องโดยตรงคล้ายเตาอบ", "isCorrect": false },
+        { "text": "ทำผนังบ้านด้วยคอนกรีตทึบหนาพิเศษทาสีเข้มรอบบ้านเพื่อกักเก็บความเย็นจากพื้นดิน", "rationale": "ตัวลวงความเย็น คอนกรีตหนาสีเข้มจะดูดความร้อนกลางวันเก็บไว้ และจะคายความร้อนอบอ้าวออกมาในบ้านตอนกลางคืน", "isCorrect": false }
+      ],
+      "hint": "สีใดที่สะท้อนแสงได้ดีที่สุด และวัสดุประเภทใดที่ช่วย 'สกัดกั้น' ไม่ให้ความร้อนไหลผ่านจากที่สูงลงสู่ที่ต่ำ"
+    }
+  ]
+};
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+let state = {
+  isStarted: false,
+  studentName: '',
+  studentId: '',
+  studentLevel: 'สกร. ระดับมัธยมศึกษาตอนต้น',
+  questions: [],
+  current: 0,
+  answers: [],
+  checked: []
+};
+
+function initQuiz() {
+  let shuffled = shuffleArray([...quizData.questions]);
+  shuffled = shuffled.map(q => {
+    let opts = shuffleArray([...q.answerOptions]);
+    return { ...q, answerOptions: opts };
+  });
+
+  state.questions = shuffled;
+  state.current = 0;
+  state.answers = new Array(shuffled.length).fill(null);
+  state.checked = new Array(shuffled.length).fill(false);
+}
+
+function startQuiz() {
+  const nameInput = document.getElementById('input-name').value.trim();
+  const idInput = document.getElementById('input-id').value.trim();
+  
+  if (!nameInput || !idInput) {
+    alert('⚠️ กรุณากรอกข้อมูลชื่อ-นามสกุล และรหัสนักศึกษาให้ครบถ้วนก่อนเริ่มทำข้อสอบครับ');
+    return;
+  }
+  
+  state.studentName = nameInput;
+  state.studentId = idInput;
+  state.isStarted = true;
+  
+  initQuiz();
+  renderApp();
+}
+
+function renderApp() {
+  const app = document.getElementById('quiz-app');
+  
+  if (!state.isStarted) {
+    app.innerHTML = `
+      <div class="card" style="animation: fadeIn 0.4s ease; text-align: center;">
+        <div class="emoji-banner">🧬 🧪 🪐 🔋 ⚗️</div>
+        <h2 style="font-size: 18px; margin-bottom: 18px; color: var(--primary); font-weight: 700;">ระบบลงทะเบียนเข้าทดสอบวิทยาศาสตร์ออนไลน์</h2>
+        
+        <div class="form-group">
+          <label for="input-name">ชื่อ - นามสกุล *</label>
+          <input type="text" id="input-name" class="form-control" placeholder="ระบุชื่อและนามสกุลของคุณ" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="input-id">รหัสนักศึกษา สกร. *</label>
+          <input type="text" id="input-id" class="form-control" placeholder="ระบุรหัสประจำตัวผู้เรียน" required>
+        </div>
+        
+        <div class="form-group">
+          <label>ระดับชั้น/หลักสูตร</label>
+          <input type="text" class="form-control" value="${state.studentLevel}" disabled style="background-color: #f1f5f9; font-weight: 600; color: var(--primary-dark)">
+        </div>
+        
+        <button class="btn btn-primary" onclick="startQuiz()" style="width: 100%; margin-top: 12px; font-size: 16px;">🔬 เริ่มทำข้อสอบชุดที่ 5 (วิทย์ ม.ต้น)</button>
+      </div>
+    `;
+    return;
+  }
+
+  if (state.current >= state.questions.length) {
+    renderSummary(app);
+    return;
+  }
+
+  const q = state.questions[state.current];
+  const pct = Math.round((state.current / state.questions.length) * 100);
+  const selectedIdx = state.answers[state.current];
+  const isChecked = state.checked[state.current];
+
+  let hintHtml = q.hint ? `<div class="hint-box">💡 <b>คำแนะนำ/แนวคิดทางวิทยาศาสตร์:</b> ${q.hint}</div>` : '';
+  
+  let optionsHtml = q.answerOptions.map((opt, idx) => {
+    let cls = 'option-item';
+    if (selectedIdx === idx) cls += ' selected';
+    if (isChecked) {
+      cls += ' disabled';
+      if (opt.isCorrect) cls += ' correct-reveal';
+      else if (selectedIdx === idx) cls += ' wrong-reveal';
+    }
+    return `
+      <div class="${cls}" onclick="selectAnswer(${idx})">
+        <span class="radio-dot"></span>
+        <div style="flex-grow:1;">${opt.text}</div>
+      </div>
+    `;
+  }).join('');
+
+  let feedbackHtml = '';
+  if (isChecked && selectedIdx !== null) {
+    const isCorrect = q.answerOptions[selectedIdx].isCorrect;
+    const rationale = q.answerOptions[selectedIdx].rationale;
+    feedbackHtml = `
+      <div class="rationale-box ${isCorrect ? 'correct' : 'wrong'}">
+        <b>${isCorrect ? '✨ ยอดเยี่ยม วิเคราะห์เหตุผลถูกต้อง!' : '❌ จุดที่พิจารณาคลาดเคลื่อน'}</b> — ${rationale}
+      </div>
+    `;
+  }
+
+  app.innerHTML = `
+    <div class="card">
+      <div class="progress-container">
+        <span><b>ข้อที่ ${state.current + 1}</b> จาก ${state.questions.length}</span>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+        <span>${pct}% เสร็จสิ้น</span>
+      </div>
+      
+      <div class="question-text">${q.question}</div>
+      ${hintHtml}
+      <div class="options-list">${optionsHtml}</div>
+      ${feedbackHtml}
+
+      <div class="nav-actions">
+        <button class="btn btn-secondary" onclick="goPrev()" ${state.current === 0 ? 'disabled' : ''}>⬅️ ข้อก่อนหน้า</button>
+        ${!isChecked ? 
+          `<button class="btn btn-primary" onclick="checkAnswer()" ${selectedIdx === null ? 'disabled' : ''}>✔️ ส่งตรวจคำตอบ</button>` :
+          `<button class="btn btn-primary" onclick="goNext()">${state.current === state.questions.length - 1 ? '🏁 ประมวลผลลัพธ์คะแนน' : 'ข้อถัดไป ➡️'}</button>`
+        }
+      </div>
+    </div>
+  `;
+}
+
+function renderSummary(app) {
+  let score = 0;
+  let reviewHtml = '';
+
+  state.questions.forEach((q, i) => {
+    const userAnsIdx = state.answers[i];
+    const isCorrect = userAnsIdx !== null && q.answerOptions[userAnsIdx].isCorrect;
+    if (isCorrect) score++;
+
+    let correctOpt = q.answerOptions.find(o => o.isCorrect);
+    let userOpt = userAnsIdx !== null ? q.answerOptions[userAnsIdx] : null;
+
+    reviewHtml += `
+      <div class="review-item">
+        <div style="font-weight:600;margin-bottom:6px;color:var(--text)">ข้อ ${i+1}: ${q.question}</div>
+        <div style="color:${isCorrect ? 'var(--green)' : 'var(--red)'}; font-weight:600; font-size:14px;">
+          ${isCorrect ? '🔹 ผลการตอบ: ถูกต้องสมบูรณ์' : `🔸 ผลการตอบ: คลาดเคลื่อน (คำตอบของคุณ: ${userOpt ? userOpt.text : 'ไม่เลือกคำตอบ'})`}
+        </div>
+        <div style="color:var(--text-muted);font-size:13px;margin-top:4px;background:#f8fafc;padding:8px;border-radius:6px;">
+          <b>🔬 เฉลยและบทวิเคราะห์เชิงเหตุผล:</b> ${correctOpt ? correctOpt.rationale : ''}
+        </div>
+      </div>
+    `;
+  });
+
+  const pct = Math.round((score / state.questions.length) * 100);
+  const isPass = pct >= 60;
+  const grade = isPass ? "ผ่านเกณฑ์ประเมินทักษะกระบวนการวิทย์ระดับดีเยี่ยม 🎓" : "ควรศึกษาทบทวนเนื้อหาเพิ่มเติม 📘";
+  const gc = isPass ? "grade-pass" : "grade-fail";
+  const msg = isPass ? "ขอชื่นชม! ท่านมีทักษะการคิดวิเคราะห์ นำความรู้ทางวิทยาศาสตร์ไปประยุกต์ใช้ในชีวิตประจำวันได้ดีมาก" : "ไม่เป็นไรครับ วิทยาศาสตร์คือการเรียนรู้จากข้อผิดพลาด แนะนำให้อ่านบทวิเคราะห์ด้านล่างเพื่อปรับมโนทัศน์ให้ถูกต้อง";
+
+  app.innerHTML = `
+    <div class="card summary-card">
+      <div style="font-size:40px;margin-bottom:8px;">🏆</div>
+      <h2 style="font-size:22px; margin-bottom:4px; color: var(--primary); font-weight:700;">ใบรายงานผลคะแนนสอบดิจิทัล (N-NET วิทย์)</h2>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">สถาบันส่งเสริมการเรียนรู้ (สกร.)</div>
+      
+      <div class="student-info-box">
+        <p>👤 <b>ชื่อผู้เข้าสอบ:</b> ${state.studentName}</p>
+        <p>🆔 <b>รหัสประจำตัว:</b> ${state.studentId}</p>
+        <p>🏫 <b>ระดับการศึกษา:</b> ${state.studentLevel}</p>
+      </div>
+
+      <div style="font-size:16px;color:var(--text); margin-top:14px;">สรุปคะแนนทำได้รวม <b>${score}</b> คะแนน จากทั้งหมด <b>${state.questions.length}</b> ข้อ</div>
+      <div style="margin:10px 0;"><span class="grade-pill ${gc}">${grade}</span></div>
+      <div style="color:var(--text-muted);margin-bottom:16px;font-size:14px;padding:0 10px;">${msg}</div>
+      
+      <div class="grid-stats">
+        <div class="stat-box"><div class="stat-num" style="color:var(--green)">${score}</div><div class="slbl">ถูกต้อง (ข้อ)</div></div>
+        <div class="stat-box"><div class="stat-num" style="color:var(--red)">${state.questions.length - score}</div><div class="slbl">คลาดเคลื่อน (ข้อ)</div></div>
+        <div class="stat-box"><div class="stat-num" style="color:var(--primary)">${pct}%</div><div class="slbl">คิดเป็นเปอร์เซ็นต์</div></div>
+      </div>
+      
+      <p style="font-size:12px; color:var(--red); font-weight:600; margin-bottom:18px; background:var(--red-light); padding:6px; border-radius:6px;">📸 นักศึกษาสามารถบันทึกภาพหน้าจอนี้ส่งคุณครู สกร. เพื่อเป็นหลักฐานกิจกรรมการเรียนรู้แบบท้าทาย</p>
+      
+      <button class="btn btn-primary" onclick="restartQuiz()">🔄 ทำแบบทดสอบใหม่อีกครั้ง (สุ่มข้อสอบชุดใหม่)</button>
+    </div>
+    
+    <div class="card" style="margin-top:6px;">
+      <div class="review-title">📋 รายละเอียดเฉลยและบทวิเคราะห์มโนทัศน์ (Concept) แต่ละข้อ</div>
+      ${reviewHtml}
+    </div>
+  `;
+}
+
+function selectAnswer(i) { if (!state.checked[state.current]) { state.answers[state.current] = i; renderApp(); } }
+function checkAnswer()   { if (state.answers[state.current] !== null) { state.checked[state.current] = true; renderApp(); } }
+function goNext()        { state.current++; renderApp(); }
+function goPrev()        { if (state.current > 0) { state.current--; renderApp(); } }
+function restartQuiz()   { 
+  state.isStarted = false; 
+  renderApp(); 
+}
+
+renderApp();
+</script>
+</body>
+</html>
