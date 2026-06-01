@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบทดสอบ N-NET วิทยาศาสตร์ ระดับมัธยมศึกษาตอนต้น (ชุดที่ 3)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght=400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #0284c7; 
+    --primary-dark: #0369a1;
+    --primary-light: #f0f9ff;
+    --green: #166534; --green-light: #f0fdf4; --green-mid: #bbf7d0;
+    --red: #991b1b; --red-light: #fef2f2; --red-mid: #fecaca;
+    --amber-light: #fffbe6; --amber: #d97706;
+    --gray-bg: #f8fafc; --gray-card: #ffffff; --gray-border: #e2e8f0;
+    --text: #0f172a; --text-muted: #475569;
+  }
+  body { font-family: 'Sarabun', sans-serif; background: var(--gray-bg); color: var(--text); padding: 16px 8px; line-height: 1.6; }
+  .container { max-width: 650px; margin: 0 auto; padding-bottom: 60px; }
+  
+  .header-card { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 26px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center; }
+  .header-card h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .header-card p { font-size: 14px; opacity: 0.9; }
+
+  .card { background: var(--gray-card); border: 1px solid var(--gray-border); border-radius: 16px; padding: 24px; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01), 0 2px 4px -1px rgba(0,0,0,0.01); }
+  
+  .emoji-banner { font-size: 48px; text-align: center; margin-bottom: 16px; margin-top: 8px; animation: bounce 2s infinite; }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .form-group { margin-bottom: 16px; text-align: left; }
+  .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+  .form-control { width: 100%; padding: 12px 14px; border: 1px solid var(--gray-border); border-radius: 10px; font-family: 'Sarabun', sans-serif; font-size: 15px; transition: all 0.2s; }
+  .form-control:focus { outline: none; border-color: var(--primary); background-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); }
+  
+  .progress-container { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; font-size: 14px; color: var(--text-muted); font-weight: 500; }
+  .progress-bar-bg { background: #e2e8f0; height: 8px; border-radius: 4px; flex-grow: 1; margin: 0 12px; position: relative; overflow: hidden; }
+  .progress-bar-fill { background: var(--primary); height: 100%; width: 0%; transition: width 0.3s ease; }
+
+  .question-text { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: var(--text); white-space: pre-line; background: #fdfdfd; padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary); }
+  .hint-box { background: var(--amber-light); border-left: 4px solid var(--amber); padding: 12px 16px; border-radius: 4px 8px 8px 4px; margin-bottom: 20px; font-size: 14px; color: var(--amber); }
+
+  .options-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .option-item { display: flex; align-items: flex-start; padding: 14px 16px; border: 1px solid var(--gray-border); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; background: white; font-size: 15px; }
+  .option-item:hover { border-color: #94a3b8; background: #f8fafc; }
+  .option-item.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary-dark); font-weight: 500; }
+  
+  .option-item.correct-reveal { border-color: var(--green-mid); background: var(--green-light); color: var(--green); font-weight: 500; }
+  .option-item.wrong-reveal { border-color: var(--red-mid); background: var(--red-light); color: var(--red); }
+  .option-item.disabled { cursor: not-allowed; pointer-events: none; }
+
+  .radio-dot { height: 18px; min-width: 18px; border: 2px solid #cbd5e1; border-radius: 50%; margin-right: 12px; margin-top: 2px; position: relative; display: inline-block; }
+  .option-item.selected .radio-dot { border-color: var(--primary); }
+  .option-item.selected .radio-dot::after { content: ''; position: absolute; width: 10px; height: 10px; background: var(--primary); border-radius: 50%; top: 2px; left: 2px; }
+  .option-item.correct-reveal .radio-dot { border-color: var(--green); }
+  .option-item.correct-reveal .radio-dot::after { content: '✓'; color: var(--green); font-size: 12px; font-weight: bold; position: absolute; top: -4px; left: 2px; }
+  .option-item.wrong-reveal .radio-dot { border-color: var(--red); }
+  .option-item.wrong-reveal .radio-dot::after { content: '✕'; color: var(--red); font-size: 12px; font-weight: bold; position: absolute; top: -4px; left: 2px; }
+
+  .rationale-box { padding: 14px 16px; border-radius: 10px; font-size: 14px; margin-bottom: 20px; animation: fadeIn 0.3s ease; }
+  .rationale-box.correct { background: var(--green-light); border: 1px dashed var(--green-mid); color: var(--green); }
+  .rationale-box.wrong { background: var(--red-light); border: 1px dashed var(--red-mid); color: var(--red); }
+
+  .nav-actions { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; }
+  .btn { flex: 1; padding: 12px 16px; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; text-decoration: none; }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-primary:disabled { background: #cbd5e1; color: #94a3b8; cursor: not-allowed; }
+  .btn-secondary { background: #e2e8f0; color: var(--text); }
+  .btn-secondary:hover { background: #cbd5e1; }
+  .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .summary-card { text-align: center; padding: 32px 24px; border: 2px solid var(--primary) !important; }
+  .student-info-box { background: #eff6ff; border: 1px dashed var(--primary); padding: 16px; border-radius: 12px; margin: 16px 0; text-align: left; }
+  .student-info-box p { font-size: 14px; margin-bottom: 4px; color: var(--text); }
+  .student-info-box p b { color: var(--primary); }
+  
+  .grade-pill { display: inline-block; padding: 6px 18px; border-radius: 20px; font-weight: 700; font-size: 16px; margin: 8px 0; }
+  .grade-pass { background: var(--green-light); color: var(--green); border: 1px solid var(--green-mid); }
+  .grade-fail { background: var(--red-light); color: var(--red); border: 1px solid var(--red-mid); }
+  
+  .grid-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; }
+  .stat-box { background: #f8fafc; border: 1px solid var(--gray-border); padding: 12px; border-radius: 10px; text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 700; }
+  .slbl { font-size: 12px; color: var(--text-muted); }
+
+  .review-title { font-size: 16px; font-weight: 700; margin-bottom: 14px; text-align: left; border-bottom: 2px solid var(--primary); padding-bottom: 6px; color: var(--primary); }
+  .review-item { text-align: left; padding: 16px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+  .review-item:last-child { border-bottom: none; }
+  
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-card">
+    <h1>สกร.โนนสัง ระดับมัธยมศึกษาตอนต้น — แบบทดสอบ N-NET</h1>
+    <p>วิชาวิทยาศาสตร์เพื่อชีวิตและสิ่งแวดล้อม (ชุดที่ 3: ระดับท้าทาย)</p>
+  </div>
+
+  <div id="quiz-app"></div>
+</div>
+
+<script>
+const quizData = {
+  "questions": [
+    {
+      "question": "สถานการณ์: ชาวสวนคนหนึ่งสังเกตพบว่าใบของต้นมะนาวมีลักษณะหงิกงอและมีจุดสีน้ำตาล เขาตั้งสมมติฐานว่าเกิดจากการขาดธาตุอาหารชนิดหนึ่ง เพื่อพิสูจน์สมมติฐานนี้อย่างถูกต้องตามกระบวนการทางวิทยาศาสตร์ ตัวแปรต้นในการทดลองควรเป็นข้อใด?",
+      "answerOptions": [
+        { "text": "ชนิดและปริมาณของธาตุอาหารที่พืชได้รับ", "rationale": "ถูกต้อง! ตัวแปรต้นคือสิ่งที่ผู้ทดลองกำหนดให้แตกต่างกันเพื่อดูผลที่ตามมา ในที่นี้คือชนิดหรือปริมาณของธาตุอาหารที่ต้องการศึกษา", "isCorrect": true },
+        { "text": "ลักษณะของใบมะนาวที่หงิกงอและจุดสีน้ำตาล", "rationale": "ตัวลวงเนื่องจากนี่คือ 'ตัวแปรตาม' ซึ่งเป็นผลลัพธ์ที่เกิดจากการเปลี่ยนแปลงของตัวแปรต้น", "isCorrect": false },
+        { "text": "ปริมาณน้ำ แสงแดด และชนิดของดินที่ใช้ปลูก", "rationale": "ตัวลวงเนื่องจากสิ่งเหล่านี้เป็น 'ตัวแปรควบคุม' ที่ต้องจัดให้เหมือนกันทุกกลุ่มเพื่อไม่ให้ผลการทดลองคลาดเคลื่อน", "isCorrect": false },
+        { "text": "พันธุ์ของต้นมะนาวและอายุของพืชที่นำมาทดลอง", "rationale": "ตัวลวงที่เป็นตัวแปรควบคุมที่ต้องควบคุมให้คงที่ ไม่ใช่ตัวแปรต้น", "isCorrect": false }
+      ],
+      "hint": "ตัวแปรต้น (Independent Variable) คือ สิ่งที่เป็นต้นเหตุ หรือสิ่งที่เราต้องการจัดให้แตกต่างกันในการทดลอง"
+    },
+    {
+      "question": "คำถาม: นักเรียนคนหนึ่งนำเซลล์เยื่อบุข้างแก้มและเซลล์สาหร่ายหางกระรอกไปส่องดูด้วยกล้องจุลทรรศน์ โครงสร้างใดต่อไปนี้ที่จะพบได้ในเซลล์สาหร่ายหางกระรอก แต่จะไม่พบในเซลล์เยื่อบุข้างแก้มอย่างแน่นอน?",
+      "answerOptions": [
+        { "text": "ผนังเซลล์และคลอโรพลาสต์", "rationale": "ถูกต้อง! ผนังเซลล์ (Cell Wall) และคลอโรพลาสต์ (Chloroplast) เป็นโครงสร้างเฉพาะที่พบในเซลล์พืช แต่ไม่พบในเซลล์สัตว์", "isCorrect": true },
+        { "text": "นิวเคลียสและไซโทพลาซึม", "rationale": "ตัวลวงเนื่องจากนิวเคลียสและไซโทพลาซึมเป็นโครงสร้างพื้นฐานที่พบได้ในเซลล์ของสิ่งมีชีวิตทั้งพืชและสัตว์", "isCorrect": false },
+        { "text": "เยื่อหุ้มเซลล์และไมโทคอนเดรีย", "rationale": "ตัวลวงเนื่องจากทั้งเซลล์พืชและเซลล์สัตว์ต่างก็มีเยื่อหุ้มเซลล์และไมโทคอนเดรียคอยทำหน้าที่สร้างพลังงานเหมือนกัน", "isCorrect": false },
+        { "text": "แวคิวโอลและไรโบโซม", "rationale": "ตัวลวงเนื่องจากพบได้ในทั้งสองเซลล์ (แม้แวคิวโอลในพืชจะใหญ่กว่ามากก็ตาม)", "isCorrect": false }
+      ],
+      "hint": "พิจารณาความแตกต่างที่สำคัญที่สุดระหว่างโครงสร้างของเซลล์พืช (สาหร่าย) และเซลล์สัตว์ (เยื่อบุข้างแก้ม)"
+    },
+    {
+      "question": "สถานการณ์: ในระบบนิเวศแห่งหนึ่ง หากเกษตรกรฉีดพ่นสารเคมีกำจัดแมลงเป็นเวลานานจนทำให้ประชากรของตั๊กแตนลดลงอย่างรวดเร็ว ตามห่วงโซ่อาหาร: ต้นข้าว -> ตั๊กแตน -> กบ -> งู ปรากฏการณ์ใดมีโอกาสเกิดขึ้นเป็นลำดับแรก?",
+      "answerOptions": [
+        { "text": "ประชากรกบขาดแคลนอาหารและลดจำนวนลง", "rationale": "ถูกต้อง! เพราะตั๊กแตนเป็นอาหารโดยตรงของกบ เมื่อตั๊กแตนลดลง กบจึงได้รับผลกระทบเป็นลำดับแรกเนื่องจากขาดแคลนอาหาร", "isCorrect": true },
+        { "text": "ประชากรงูจะเพิ่มขึ้นอย่างรวดเร็ว", "rationale": "ตัวลวงที่ไม่สมเหตุสมผล เพราะเมื่องูลดอาหาร (กบ) งูควรจะลดลง ไม่ใช่เพิ่มขึ้น", "isCorrect": false },
+        { "text": "ผลผลิตของต้นข้าวจะลดลงอย่างมาก", "rationale": "ตัวลวงที่ขัดแย้ง เพราะตั๊กแตนกินข้าว เมื่อตั๊กแตนลดลง ต้นข้าวควรจะเจริญเติบโตได้ดีขึ้นหรือปลอดภัยขึ้น", "isCorrect": false },
+        { "text": "กบจะเปลี่ยนไปกินงูเป็นอาหารแทน", "rationale": "ตัวลวงที่เป็นการเปลี่ยนพฤติกรรมผู้บริโภคที่ผิดธรรมชาติในห่วงโซ่อาหาร", "isCorrect": false }
+      ],
+      "hint": "วิเคราะห์ความสัมพันธ์แบบส่งผลกระทบต่อเนื่อง (Chain Effect) สิ่งมีชีวิตที่อยู่ลำดับถัดไปจากผู้ที่ลดลงจะขาดอาหารทันที"
+    },
+    {
+      "question": "คำถาม: การเปลี่ยนแปลงในข้อใดต่อไปนี้ จัดเป็นการเปลี่ยนแปลงทางเคมี (Chemical Change) ทั้งหมด?",
+      "answerOptions": [
+        { "text": "การเกิดสนิมของตะปูเหล็ก และการสุกของมะม่วง", "rationale": "ถูกต้อง! ทั้งสองเหตุการณ์ทำให้เกิดสารใหม่ที่มีคุณสมบัติเปลี่ยนไปจากเดิม ไม่สามารถกลับเป็นสารเดิมได้ง่ายด้วยวิธีทางกายภาพ", "isCorrect": true },
+        { "text": "การหลอมเหลวของไอศกรีม และการระเหิดของลูกเหม็น", "rationale": "ตัวลวงเนื่องจากทั้งสองเป็นการเปลี่ยนแปลงทางกายภาพ (Physical Change) ซึ่งเป็นเพียงการเปลี่ยนสถานะของสาร", "isCorrect": false },
+        { "text": "การทำน้ำแข็งไส และการละลายของน้ำตาลในน้ำ", "rationale": "ตัวลวงเนื่องจากการทำน้ำแข็งเป็นการเปลี่ยนสถานะ และการละลายเป็นเพียงการกระจายตัวของอนุภาค ไม่เกิดสารใหม่", "isCorrect": false },
+        { "text": "การต้มน้ำจนเดือดกลายเป็นไอ และการบดกรวดให้ละเอียด", "rationale": "ตัวลวงที่เป็นการเปลี่ยนสถานะและการเปลี่ยนรูปทรงภายนอกเท่านั้น ซึ่งเป็นการเปลี่ยนแปลงทางกายภาพ", "isCorrect": false }
+      ],
+      "hint": "การเปลี่ยนแปลงทางเคมีต้องเกิด 'สารใหม่' ที่มีสมบัติต่างไปจากเดิม เช่น มีกลิ่น สีเปลี่ยน เกิดแก๊ส หรือเกิดตะกอน"
+    },
+    {
+      "question": "โจทย์ปัญหา: ช่างทองนำโลหะผสมชนิดหนึ่งหนัก 50 กรัม ไปหาความหนาแน่นโดยแทนที่น้ำในถ้วยยูรีกา พบว่าน้ำล้นออกมามีปริมาตร 5 ลูกบาศก์เซนติเมตร โลหะผสมนี้มีความหนาแน่นเท่าใด และถ้าใส่ลงในสารละลายที่มีความหนาแน่น 8 g/cm³ โลหะนี้จะลอยหรือจม?",
+      "answerOptions": [
+        { "text": "ความหนาแน่น 10 g/cm³ และโลหะจะจม", "rationale": "ถูกต้อง! สูตรความหนาแน่น d = m/v = 50 กรัม / 5 ลบ.ซม. = 10 g/cm³ เมื่อโลหะมีความหนาแน่นมากกว่าสารละลาย (10 > 8) โลหะจึงจมน้ำ", "isCorrect": true },
+        { "text": "ความหนาแน่น 10 g/cm³ และโลหะจะลอย", "rationale": "ตัวลวงที่คำนวณความหนาแน่นถูก แต่ตีความสภาวะการลอยการจมผิดพลาด (วัตถุหนาแน่นมากกว่าของเหลวต้องจม)", "isCorrect": false },
+        { "text": "ความหนาแน่น 0.1 g/cm³ และโลหะจะลอย", "rationale": "ตัวลวงจากการกลับสูตรคำนวณเอาปริมาตรตั้งหารด้วยมวล (5/50 = 0.1)", "isCorrect": false },
+        { "text": "ความหนาแน่น 250 g/cm³ และโลหะจะจม", "rationale": "ตัวลวงจากการนำมวลและปริมาตรมาคูณกันตรงๆ (50 × 5 = 250) แทนที่จะหารกัน", "isCorrect": false }
+      ],
+      "hint": "หาความหนาแน่นจากสูตร ความหนาแน่น = มวล / ปริมาตร จากนั้นเปรียบเทียบ: วัตถุจะจมเมื่อมีความหนาแน่นมากกว่าของเหลว"
+    },
+    {
+      "question": "คำถาม: สารละลายในข้อใดต่อไปนี้ มีสมบัติเป็นกรดทั้งหมด และสามารถเปลี่ยนสีกระดาษลิตมัสจากสีน้ำเงินเป็นสีแดงได้?",
+      "answerOptions": [
+        { "text": "น้ำมะนาว น้ำส้มสายชู น้ำอัดลม", "rationale": "ถูกต้อง! สารเหล่านี้มีค่า pH ต่ำกว่า 7 มีฤทธิ์เป็นกรด รสเปรี้ยว และเปลี่ยนสีกระดาษลิตมัสจากน้ำเงินเป็นแดงได้ทั้งหมด", "isCorrect": true },
+        { "text": "น้ำผงซักฟอก น้ำปูนใส น้ำขี้เถ้า", "rationale": "ตัวลวงเนื่องจากสารกลุ่มนี้มีสมบัติเป็นเบส (pH > 7) ซึ่งจะเปลี่ยนสีกระดาษลิตมัสจากแดงเป็นน้ำเงิน", "isCorrect": false },
+        { "text": "น้ำเกลือ น้ำเชื่อม น้ำบริสุทธิ์", "rationale": "ตัวลวงเนื่องจากเป็นสารละลายที่มีสมบัติเป็นกลาง (pH ≈ 7) ไม่เปลี่ยนสีกระดาษลิตมัสทั้งสองสี", "isCorrect": false },
+        { "text": "น้ำยาล้างจาน น้ำสบู่ น้ำส้มสายชู", "rationale": "ตัวลวงที่มีสารผสมกันระหว่างเบส (น้ำสบู่) และกรด (น้ำส้มสายชู) ไม่ได้เป็นกรดทั้งหมด", "isCorrect": false }
+      ],
+      "hint": "สารที่เป็นกรดมักมีรสเปรี้ยว และทดสอบด้วยกระดาษลิตมัสจะเปลี่ยนจาก 'น้ำเงินเป็นแดง' (จำว่า กรด-แดง)"
+    },
+    {
+      "question": "สถานการณ์: ปรากฏการณ์เรือนกระจก (Greenhouse Effect) เกิดจากการสะสมของแก๊สเรือนกระจกในชั้นบรรยากาศมากเกินไป หากเราต้องการลดแก๊สคาร์บอนไดออกไซด์ที่เป็นตัวการหลักอย่างยั่งยืน วิธีการในข้อใดเหมาะสมและมีประสิทธิภาพมากที่สุด?",
+      "answerOptions": [
+        { "text": "ลดการเผาไหม้เชื้อเพลิงฟอสซิลและเพิ่มการปลูกป่าไม้ทดแทน", "rationale": "ถูกต้อง! เพราะการลดเผาฟอสซิลเป็นการหยุดปล่อยแก๊สใหม่ และการปลูกป่าเป็นการเพิ่มผู้ผลิตที่ช่วยตรึงแก๊สคาร์บอนไดออกไซด์ไปใช้ในการสังเคราะห์ด้วยแสง", "isCorrect": true },
+        { "text": "ฉีดพ่นละอองน้ำขึ้นไปบนชั้นบรรยากาศเพื่อดักจับแก๊ส", "rationale": "ตัวลวงที่ไม่สามารถทำได้จริงในระดับมหภาคและไม่ใช่วิธีแก้ปัญหาที่ต้นเหตุอย่างยั่งยืน", "isCorrect": false },
+        { "text": "รณรงค์ให้หันมาใช้แก๊สคลอโรฟลูออโรคาร์บอน (CFC) แทน", "rationale": "ตัวลวงที่เป็นอันตรายอย่างยิ่ง เพราะแก๊ส CFC เป็นสารที่ทำลายชั้นโอโซนและเป็นแก๊สเรือนกระจกที่รุนแรงกว่าเดิม", "isCorrect": false },
+        { "text": "เปลี่ยนไปเผาขยะกลางแจ้งแทนการฝังกลบ", "rationale": "ตัวลวงที่ยิ่งเพิ่มการปล่อยแก๊สคาร์บอนไดออกไซด์และฝุ่นพิษ PM2.5 สู่ชั้นบรรยากาศ", "isCorrect": false }
+      ],
+      "hint": "คิดถึงหลักการลดการปล่อยที่ต้นตอ ร่วมกับการเพิ่มตัวดูดซับแก๊สคาร์บอนไดออกไซด์ตามธรรมชาติ (การสังเคราะห์ด้วยแสงของพืช)"
+    },
+    {
+      "question": "คำถาม: ระบบหมุนเวียนเลือดของมนุษย์ ห้องหัวใจใดทำหน้าที่รับเลือดที่มีออกซิเจนสูงจากปอด และห้องใดทำหน้าที่สูบฉีดเลือดไปยังส่วนต่าง ๆ ของร่างกายตามลำดับ?",
+      "answerOptions": [
+        { "text": "หัวใจห้องบนซ้าย และ หัวใจห้องล่างซ้าย", "rationale": "ถูกต้อง! บนซ้าย (Left Atrium) รับเลือดแดงที่ฟอกแล้วจากปอด จากนั้นส่งต่อให้ล่างซ้าย (Left Ventricle) สูบฉีดไปเลี้ยงร่างกาย", "isCorrect": true },
+        { "text": "หัวใจห้องบนขวา และ หัวใจห้องล่างขวา", "rationale": "ตัวลวงเนื่องจากฝั่งขวาของหัวใจทำหน้าที่จัดการกับเลือดดำ (ออกซิเจนต่ำ) ที่มาจากร่างกายเพื่อส่งไปฟอกที่ปอด", "isCorrect": false },
+        { "text": "หัวใจห้องบนซ้าย และ หัวใจห้องล่างขวา", "rationale": "ตัวลวงที่สลับหน้าที่ส่วนหลัง เพราะห้องล่างขวาส่งเลือดไปปอด ไม่ใช่ไปเลี้ยงทั่วร่างกาย", "isCorrect": false },
+        { "text": "หัวใจห้องล่างซ้าย และ หัวใจห้องบนขวา", "rationale": "ตัวลวงที่เรียงลำดับโครงสร้างสลับทิศทางและบทบาทหน้าที่", "isCorrect": false }
+      ],
+      "hint": "จำหลักการว่า 'ฝั่งซ้ายของหัวใจคือฝั่งเลือดแดง (ออกซิเจนสูง)' โดยห้องบนทำหน้าที่รับ และห้องล่างทำหน้าที่ปั๊มสูบฉีด"
+    },
+    {
+      "question": "สถานการณ์: อาหารกลางวันของนักศึกษาประกอบด้วย ข้าวสวย นึ่งไก่ และผัดผัก อวัยวะใดในระบบย่อยอาหารที่จะเริ่มย่อยสารอาหารประเภทโปรตีนจากเนื้อไก่เป็นแห่งแรก และย่อยเสร็จสิ้นที่อวัยวะใด?",
+      "answerOptions": [
+        { "text": "กระเพาะอาหาร และ ลำไส้เล็ก", "rationale": "ถูกต้อง! โปรตีนจะเริ่มถูกย่อยทางเคมีครั้งแรกที่กระเพาะอาหารด้วยเอนไซม์เพปซิน และจะถูกย่อยจนสมบูรณ์จนดูดซึมได้ที่ลำไส้เล็ก", "isCorrect": true },
+        { "text": "ปาก และ กระเพาะอาหาร", "rationale": "ตัวลวงเนื่องจากที่ปากมีการย่อยแป้ง (คาร์โบไฮเดรต) เป็นแห่งแรก ไม่ใช่โปรตีน", "isCorrect": false },
+        { "text": "ลำไส้เล็ก และ ลำไส้ใหญ่", "rationale": "ตัวลวงเนื่องจากลำไส้ใหญ่ไม่มีการย่อยอาหารแล้ว มีเพียงการดูดซึมน้ำและแร่ธาตุกลับคืนเท่านั้น", "isCorrect": false },
+        { "text": "กระเพาะอาหาร และ ลำไส้ใหญ่", "rationale": "ตัวลวงที่เข้าใจผิดว่ากระบวนการย่อยสิ้นสุดที่ลำไส้ใหญ่", "isCorrect": false }
+      ],
+      "hint": "คาร์โบไฮเดรตเริ่มย่อยที่ปาก โปรตีนเริ่มย่อยที่กระเพาะอาหาร ส่วนไขมันเริ่มย่อยที่ลำไส้เล็ก และสารอาหารทุกชนิดจะย่อยเสร็จสิ้นที่ลำไส้เล็ก"
+    },
+    {
+      "question": "โจทย์ปัญหา: ออกแรง 20 นิวตัน ผลักกล่องไม้หนัก 5 กิโลกรัม ให้เคลื่อนที่ไปข้างหน้าบนพื้นราบเป็นระยะทาง 4 เมตร โดยใช้เวลาไปทั้งสิ้น 2 วินาที งานที่เกิดขึ้นจากการผลักกล่องและความสามารถในการทำงาน (กำลัง) มีค่าเท่าใด?",
+      "answerOptions": [
+        { "text": "งาน 80 จูล และ กำลัง 40 วัตต์", "rationale": "ถูกต้อง! สูตร งาน W = F × s = 20 N × 4 m = 80 จูล, สูตร กำลัง P = W / t = 80 จูล / 2 วินาที = 40 วัตต์", "isCorrect": true },
+        { "text": "งาน 20 จูล และ กำลัง 10 วัตต์", "rationale": "ตัวลวงที่นำมวล 5 กิโลกรัมไปคำนวณสับสนกับขนาดของแรงผลัก", "isCorrect": false },
+        { "text": "งาน 100 จูล และ กำลัง 50 วัตต์", "rationale": "ตัวลวงจากการนำน้ำหนักกล่อง (5 กก.) ไปคูณแรงผลัก (20 N) ซึ่งผิดหลักการคำนวณงาน", "isCorrect": false },
+        { "text": "งาน 80 จูล และ กำลัง 160 วัตต์", "rationale": "ตัวลวงที่คำนวณงานถูกแต่นำงานไปคูณเวลาแทนการหารในการหาค่ากำลัง (80 × 2 = 160)", "isCorrect": false }
+      ],
+      "hint": "งาน (W) = แรง × ระยะทางตามแนวแรง และ กำลัง (P) = งานที่ทำได้ / เวลาที่ใช้"
+    },
+    {
+      "question": "คำถาม: เมื่อเราผสมแสงสีปฐมภูมิเข้าด้วยกัน หากฉายแสงสีเขียวและแสงสีแดงลงบนฉากสีขาวพร้อมกัน ตาของเราจะมองเห็นฉากขาวเป็นแสงสีใด และเรียกว่าการผสมสารสีหรือการผสมแสงสี?",
+      "answerOptions": [
+        { "text": "สีเหลือง และจัดเป็นการผสมแสงสี", "rationale": "ถูกต้อง! แสงสีเขียว + แสงสีแดง = แสงสีเหลือง ซึ่งเป็นหลักการของ 'การผสมแสงสี' (Additive Color Mixing) บนหน้าจอหรือฉาก", "isCorrect": true },
+        { "text": "สีน้ำตาล และจัดเป็นการผสมสารสี", "rationale": "ตัวลวงสับสนกับการผสมของเนื้อสีเทียนหรือแม่สีอินทรีย์ (สารสี) ซึ่งให้ผลลัพธ์เป็นสีน้ำตาลหรือสีเข้ม", "isCorrect": false },
+        { "text": "สีน้ำเงินเขียว และจัดเป็นการผสมแสงสี", "rationale": "ตัวลวงคู่สีที่สับสนระหว่างผลลัพธ์ของแสงสีปฐมภูมิคู่อื่น", "isCorrect": false },
+        { "text": "สีม่วงแดง และจัดเป็นการผสมสารสี", "rationale": "ตัวลวงที่นำผลผลิตของแม่สีคู่อื่นมารวมกับกระบวนการที่ผิดรูปแบบ", "isCorrect": false }
+      ],
+      "hint": "พิจารณาข้อแตกต่าง: โจทย์ระบุ 'ฉายแสงสี' ไม่ใช่การระบายสีน้ำ แม่สีของแสงคือ แดง เขียว น้ำเงิน เมื่อแดงรวมกับเขียวจะได้แสงสี..."
+    },
+    {
+      "question": "สถานการณ์: ถ้านักศึกษานั่งอยู่ในรถทัศนาจรที่กำลังเคลื่อนที่ไปข้างหน้าด้วยความเร็วคงที่ แล้วคนขับรถเหยียบเบรกอย่างกะทันหัน ร่างกายของนักศึกษาจะพุ่งไปข้างหน้า ปรากฏการณ์นี้อธิบายด้วยกฎการเคลื่อนที่ข้อใดของนิวตัน?",
+      "answerOptions": [
+        { "text": "กฎข้อที่ 1 กฎแห่งความเฉื่อย วัตถุจะรักษาสภาพนิ่งหรือเคลื่อนที่คงเดิม", "rationale": "ถูกต้อง! กฎข้อที่ 1 ระบุว่าวัตถุจะรักษาสภาพการเคลื่อนเดิม ร่างกายเคลื่อนที่ไปพร้อมรถ เมื่อรถหยุด ร่างกายยังคงต้องการเคลื่อนที่ไปข้างหน้าต่อจึงพุ่งไปข้างหน้า", "isCorrect": true },
+        { "text": "กฎข้อที่ 2 กฎของแรง แรงทำให้วัตถุเคลื่อนที่ด้วยความเร่ง", "rationale": "ตัวลวงเนื่องจากกฎข้อที่ 2 (F=ma) อธิบายความสัมพันธ์เมื่อมีแรงลัพธ์ที่ไม่เป็นศูนย์มากระทำทำให้วัตถุเปลี่ยนความเร็ว", "isCorrect": false },
+        { "text": "กฎข้อที่ 3 กฎของแรงกิริยาและแรงปฏิกิริยาที่มีขนาดเท่ากันแต่ทิศตรงข้าม", "rationale": "ตัวลวงเนื่องจากกฎข้อที่ 3 (Action = Reaction) อธิบายคู่แรงที่กระทำต่อวัตถุคนละก้อนกัน", "isCorrect": false },
+        { "text": "กฎแรงดึงดูดระหว่างมวลของเอกภพ", "rationale": "ตัวลวงที่ไม่เกี่ยวข้องกับพฤติกรรมการรักษาสภาพการเคลื่อนที่ของร่างกายในรถยนต์", "isCorrect": false }
+      ],
+      "hint": "อาการที่ร่างกายต้านทานการเปลี่ยนแปลงความเร็ว เรียกว่า 'ความเฉื่อย' (Inertia) ซึ่งตรงกับกฎการเคลื่อนที่ข้อแรก"
+    },
+    {
+      "question": "คำถาม: ข้อใดจับคู่ระหว่างโครโมโซมที่ผิดปกติกับลักษณะกลุ่มอาการของโรคทางพันธุกรรม (Genetic Disorders) ได้ถูกต้องที่สุด?",
+      "answerOptions": [
+        { "text": "โครโมโซมร่างกายคู่ที่ 21 เกินมา 1 แท่ง — กลุ่มอาการดาวน์ (Down Syndrome)", "rationale": "ถูกต้อง! เป็นสาเหตุทางพันธุกรรมที่พบบ่อยที่สุด ทำให้เด็กมีลักษณะตาชี้ขึ้น ดั้งจมูกแบน และสติปัญญาพัฒนาช้า", "isCorrect": true },
+        { "text": "โครโมโซมเพศแบบ XO โครโมโซม X ขาดหายไป — กลุ่มอาการดาวน์", "rationale": "ตัวลวงเนื่องจากโครโมโซมเพศแบบ XO คือกลุ่มอาการเทอร์เนอร์ (Turner Syndrome) พบบนเพศหญิงที่รูปร่างเตี้ยและเป็นหมัน", "isCorrect": false },
+        { "text": "โครโมโซมร่างกายคู่ที่ 13 เกินมา 1 แท่ง — กลุ่มอาการคริดูชาต์ (Cri-du-chat)", "rationale": "ตัวลวงเนื่องจากคู่ที่ 13 เกินคือกลุ่มอาการพาทัว (Patau Syndrome) ส่วนคริดูชาต์เกิดจากโครโมโซมคู่ที่ 5 แขนขาดหายไป", "isCorrect": false },
+        { "text": "โครโมโซมเพศแบบ XXY มีโครโมโซม X เกินมาในเพศหญิง — กลุ่มอาการเอ็ดเวิร์ด", "rationale": "ตัวลวงขัดแย้ง เพราะ XXY พบบนเพศชายเรียกว่ากลุ่มอาการไคลน์เฟลเตอร์ ส่วนเอ็ดเวิร์ดคือคู่ที่ 18 เกิน", "isCorrect": false }
+      ],
+      "hint": "มุ่งเน้นโรคพันธุกรรมยอดนิยมที่เป็นข้อสอบบ่อย 'โครโมโซมคู่ที่ 21 เกิน' ส่งผลให้เกิดภาวะกลุ่มอาการใด"
+    },
+    {
+      "question": "สถานการณ์: ในคืนที่ท้องฟ้ามืดสนิทและเห็นดาวชัดเจน นักศึกษาสังเกตเห็นดาวดวงหนึ่งส่องแสงสว่างนวลนิ่ง ไม่กระพริบระยิบระยับ และเคลื่อนที่เปลี่ยนตำแหน่งเมื่อเทียบกับกลุ่มดาวจักราศีในแต่ละวัน ดาวดวงนี้ควรเป็นวัตถุท้องฟ้าประเภทใด?",
+      "answerOptions": [
+        { "text": "ดาวเคราะห์ เพราะอยู่ใกล้โลกและแสงสะท้อนไม่ได้หักเหผ่านชั้นบรรยากาศจนสั่นไหวมาก", "rationale": "ถูกต้อง! ดาวเคราะห์ (Planets) จะมีแสงนิ่งนวลเพราะเห็นเป็นดวงสว่างขนาดใหญ่ในกล้อง และมีการย้ายตำแหน่งเปลี่ยนพิกัดไปตามวงโคจร จึงเรียกว่า ดาวพเนจร", "isCorrect": true },
+        { "text": "ดาวฤกษ์ เพราะเป็นดาวที่มีแสงสว่างในตัวเองและอยู่ไกลจากระบบสุริยะ", "rationale": "ตัวลวงขัดแย้ง เนื่องจากดาวฤกษ์อยู่ไกลมากจนเห็นเป็นจุดพิกัด แสงจึงถูกชั้นบรรยากาศโลกหักเหทำให้เห็นกระพริบระยิบระยับตลอดเวลา", "isCorrect": false },
+        { "text": "ดาวตกหรือผีพุ่งไต้ ที่กำลังเกิดการเผาไหม้ในชั้นบรรยากาศ", "rationale": "ตัวลวงเนื่องจากดาวตกจะปรากฏตัวเป็นเส้นแสงพุ่งผ่านอย่างรวดเร็วเพียงไม่กี่วินาทีแล้วดับไป ไม่ได้ค้างคืนสังเกตได้หลายวัน", "isCorrect": false },
+        { "text": "ดาวหางที่กำลังโคจรเข้าใกล้ดวงอาทิตย์", "rationale": "ตัวลวงที่มักจะต้องสังเกตเห็นส่วนโครงสร้างหางที่เป็นฝุ่นและแก๊สพุ่งยาวออกไปชัดเจน ไม่ใช่แสงกลมนิ่งปกติ", "isCorrect": false }
+      ],
+      "hint": "ความแตกต่างสำคัญ: ดาวฤกษ์จะ 'กระพริบแสง' และอยู่ตำแหน่งเดิมในกลุ่มดาว ส่วนดาวเคราะห์จะ 'แสงนิ่ง' และเปลี่ยนตำแหน่งไปเรื่อย ๆ"
+    },
+    {
+      "question": "คำถาม: วิธีการแยกสารในข้อใดที่เหมาะสมที่สุดในการแยก 'น้ำมันหอมระเหย' ออกจากผิวมะกรูด เพื่อไม่ให้สารสำคัญสลายตัวจากความร้อนสูงโดยตรง?",
+      "answerOptions": [
+        { "text": "การกลั่นด้วยไอน้ำ (Steam Distillation)", "rationale": "ถูกต้อง! การกลั่นด้วยไอน้ำใช้แยกสารที่ระเหยง่ายและไม่ละลายน้ำออกจากพืช โดยไอน้ำจะพาพืชระเหยออกมาที่อุณหภูมิต่ำกว่าจุดเดือดของสาร ทำให้สารไม่สลายตัว", "isCorrect": true },
+        { "text": "การกลั่นลำดับส่วน (Fractional Distillation)", "rationale": "ตัวลวงเนื่องจากการกลั่นลำดับส่วนนิยมใช้แยกสารละลายที่มีจุดเดือดใกล้เคียงกันมาก เช่น น้ำมันดิบ หรือสารเคมีบริสุทธิ์", "isCorrect": false },
+        { "text": "การตกผลึก (Crystallization)", "rationale": "ตัวลวงเนื่องจากการตกผลึกใช้สำหรับแยกของแข็งที่เป็นตัวละลายออกจากสารละลายอิ่มตัว ไม่ใช่ของเหลวระเหยง่ายอย่างน้ำมัน", "isCorrect": false },
+        { "text": "การใช้กรวยแยก (Separating Funnel)", "rationale": "ตัวลวงเนื่องจากกรวยแยกใช้สำหรับแยกของเหลว 2 ชนิดที่ไม่ผสมกันและแยกชั้นกันอยู่แล้ว แต่ในผิวมะกรูดสารยังฝังตัวอยู่ในเนื้อเยื่อพืช", "isCorrect": false }
+      ],
+      "hint": "เทคนิคการสกัดสมุนไพรและน้ำมันหอมระเหยจากพืชสด นิยมใช้ความร้อนจาก 'ไอน้ำ' วิ่งผ่านไปพาโมเลกุลสารออกมา"
+    },
+    {
+      "question": "สถานการณ์: โรงงานอุตสาหกรรมแห่งหนึ่งแอบปล่อยน้ำทิ้งที่มีสารอินทรีย์และสารเคมีสูงลงสู่แหล่งน้ำธรรมชาติ ส่งผลให้ค่า DO (Dissolved Oxygen) และค่า BOD (Biochemical Oxygen Demand) ของน้ำในสัปดาห์ต่อมาเป็นอย่างไร?",
+      "answerOptions": [
+        { "text": "ค่า DO ต่ำลงมาก แต่ค่า BOD สูงขึ้นมาก", "rationale": "ถูกต้อง! สารอินทรีย์สูงทำให้จุลินทรีย์ใช้ออกซิเจนย่อยสลายมาก ค่าความต้องการออกซิเจน (BOD) จึงสูง และทำให้ออกซิเจนที่ละลายในน้ำ (DO) ลดต่ำลงจนน้ำเน่าเสีย", "isCorrect": true },
+        { "text": "ค่า DO สูงขึ้นมาก และค่า BOD สูงขึ้นมาก", "rationale": "ตัวลวงที่สับสนทิศทาง เพราะถ้าน้ำเสีย ออกซิเจนละลาย (DO) จะต้องลดลง ไม่ใช่เพิ่มขึ้น", "isCorrect": false },
+        { "text": "ค่า DO ต่ำลงมาก และค่า BOD ต่ำลงมาก", "rationale": "ตัวลวงเนื่องจากน้ำเสียค่า BOD จะต้องสูง (BOD ยิ่งสูง น้ำยิ่งเน่าเสีย)", "isCorrect": false },
+        { "text": "ค่า DO และ BOD ไม่เปลี่ยนแปลงเนื่องจากน้ำสามารถบำบัดตัวเองได้ทันที", "rationale": "ตัวลวงที่ไม่เป็นจริงตามกลไกนิเวศวิทยาเมื่อได้รับสารอินทรีย์เกินขีดจำกัดความสามารถ", "isCorrect": false }
+      ],
+      "hint": "จำหลักการดัชนีคุณภาพน้ำ: น้ำเน่าเสีย = DO ต่ำ (ไม่มีอากาศหายใจ) และ BOD สูง (จุลินทรีย์ต้องการแย่งใช้อากาศสูง)"
+    },
+    {
+      "question": "คำถาม: โครงสร้างทางธรณีวิทยาของโลก ข้อใดต่อไปนี้เปรียบเทียบส่วนประกอบหลักและสถานะของชั้น 'แก่นโลกชั้นนอก' (Outer Core) ได้ถูกต้องตามหลักวิทยาศาสตร์?",
+      "answerOptions": [
+        { "text": "ประกอบด้วยเหล็กและนิเกิลเหลว มีสถานะเป็นของเหลวร้อนจัด", "rationale": "ถูกต้อง! แก่นโลกชั้นนอกมีอุณหภูมิสูงพอที่จะทำให้โลหะเหล็กและนิเกิลหลอมเหลว ซึ่งการเคลื่อนที่ของของเหลวนี้ทำให้เกิดสนามแม่เหล็กโลก", "isCorrect": true },
+        { "text": "ประกอบด้วยหินซิลิเกตหนาแน่น มีสถานะเป็นของแข็งเนื้อแกร่ง", "rationale": "ตัวลวงเนื่องจากหินซิลิเกตหนาแน่นและของแข็งคือลักษณะโครงสร้างของเนื้อโลก (Mantle) ไม่ใช่แก่นโลก", "isCorrect": false },
+        { "text": "ประกอบด้วยเหล็กและนิเกิลแข็งหนาแน่นสูง เนื่องจากความกดดันมหาศาลบีบอัด", "rationale": "ตัวลวงเนื่องจากนี่คือลักษณะของแก่นโลก 'ชั้นใน' (Inner Core) ซึ่งมีความดันสูงจนแข็งตัว แม้อุณหภูมิจะสูงมากก็ตาม", "isCorrect": false },
+        { "text": "ประกอบด้วยก๊าซและหินละอองเหลวแร่ธาตุเบา", "rationale": "ตัวลวงที่จินตนาการโครงสร้างภายในผิดจากข้อเท็จจริงทางธรณีฟิสิกส์ไปมาก", "isCorrect": false }
+      ],
+      "hint": "แก่นโลกมี 2 ชั้น: ชั้นนอกเป็น 'ของเหลว' (เหล็กหลอมเหลวสร้างสนามแม่เหล็ก) ส่วนชั้นในสุดเป็น 'ของแข็ง' เพราะแรงกดดันบีบอัด"
+    },
+    {
+      "question": "สถานการณ์: ชายคนหนึ่งต้องการย้ายกระสอบข้าวสารหนัก 100 กิโลกรัม ขึ้นไปบนท้ายรถกระบะสูง 1 เมตร เขาเลือกใช้แผ่นไม้กระดานยาว 5 เมตร พาดเป็นทางลาด (เครื่องกลอย่างง่าย) แรงที่เขาต้องใช้ในการลากกระสอบข้าสารขึ้นไปมีค่าเท่าใด (ไม่คิดแรงเสียดทาน)?",
+      "answerOptions": [
+        { "text": "200 นิวตัน", "rationale": "ถูกต้อง! สูตรเครื่องกลระนาบเอียง: E × L = W × H -> แรงพยายาม E × 5 เมตร = (100 กก. × 10 m/s²) × 1 เมตร -> E × 5 = 1000 -> E = 200 นิวตัน", "isCorrect": true },
+        { "text": "1,000 นิวตัน", "rationale": "ตัวลวงซึ่งเป็นค่าน้ำหนักจริงของวัตถุในหน่วยนิวตัน (W = mg) ถ้าเขายกขึ้นตรงๆ ในแนวดิ่งต้องใช้แรงเท่านี้", "isCorrect": false },
+        { "text": "500 นิวตัน", "rationale": "ตัวลวงจากการคำนวณสับสนตัวเลขความยาวคูณความสูงผิดทิศทาง", "isCorrect": false },
+        { "text": "20 นิวตัน", "rationale": "ตัวลวงที่ลืมคูณค่าความเร่งโน้มถ่วง g (คิดแค่มวล 100 หารความยาว 5 ได้ 20) ทำให้หน่วยและมาตราส่วนผิดพลาด", "isCorrect": false }
+      ],
+      "hint": "ใช้หลักการของงาน: แรงผลักไปตามทางลาด × ความยาวทางลาด (L) = น้ำหนักวัตถุ (W) × ความสูงแนวดิ่ง (H)"
+    },
+    {
+      "question": "คำถาม: กระบวนการแบ่งเซลล์แบบ 'ไมโทซิส' (Mitosis) และ 'ไมโอซิส' (Meiosis) มีความแตกต่างกันที่สำคัญที่สุดในเรื่องใดต่อไปนี้?",
+      "answerOptions": [
+        { "text": "ไมโทซิสเป็นการแบ่งเพื่อเติบโตได้เซลล์ใหม่โครโมโซมเท่าเดิม ส่วนไมโอซิสสร้างเซลล์สืบพันธุ์โครโมโซมลดลงครึ่งหนึ่ง", "rationale": "ถูกต้อง! ไมโทซิสได้ 2 เซลล์ โครโมโซมเท่าเดิม (2n -> 2n) ไมโอซิสได้ 4 เซลล์ โครโมโซมลดครึ่งหนึ่ง (2n -> n) เพื่อใช้ในการสืบพันธุ์", "isCorrect": true },
+        { "text": "ไมโทซิสพบเฉพาะในเซลล์สัตว์ ส่วนไมโอซิสพบเฉพาะในเซลล์พืชเท่านั้น", "rationale": "ตัวลวงเนื่องจากสิ่งมีชีวิตทั้งพืชและสัตว์ต่างก็มีทั้งการแบ่งเซลล์แบบไมโทซิสและไมโอซิสในวัฏจักรชีวิต", "isCorrect": false },
+        { "text": "ไมโทซิสทำให้จำนวนโครโมโซมเพิ่มขึ้นเป็นสองเท่าเพื่อซ่อมแซมแผล", "rationale": "ตัวลวงที่ผิดหลักชีววิทยา เพราะไม่มีการแบ่งเซลล์ปกติชนิดใดที่เพิ่มจำนวนโครโมโซมถาวรเป็น 2 เท่าในสิ่งมีชีวิต", "isCorrect": false },
+        { "text": "ไมโอซิสเป็นการแบ่งนิวเคลียสโดยไม่มีการแบ่งไซโทพลาซึมติดตามมา", "rationale": "ตัวลวงขั้นตอนกระบวนการ ซึ่งทั้งสองแบบต้องมีการแบ่งไซโทพลาซึมเพื่อให้แยกขาดเป็นเซลล์ใหม่เสมอ", "isCorrect": false }
+      ],
+      "hint": "จุดประสงค์หลัก: ไมโทซิส = ร่างกายเจริญเติบโต/ซ่อมแซม (จำนวนโครโมโซมเท่าเดิม) ส่วน ไมโอซิส = สร้างไข่/อสุจิ (โครโมโซมลดครึ่ง)"
+    },
+    {
+      "question": "สถานการณ์: ในการปฐมพยาบาลเบื้องต้นผู้ป่วยที่โดนกรดไฮโดรคลอริกจากห้องปฏิบัติการหกรดใส่มืออย่างแรง หลังจากล้างด้วยน้ำสะอาดปริมาณมาก ๆ แล้ว ควรเลือกใช้สารในข้อใดทาบริเวณแผลเพื่อสะเทินฤทธิ์กรดที่เหลือได้อย่างปลอดภัย?",
+      "answerOptions": [
+        { "text": "สารละลายโซเดียมไฮโดรเจนคาร์บอเนต (เบคกิ้งโซดา) เจือจาง ซึ่งเป็นเบสอ่อน", "rationale": "ถูกต้อง! การสะเทินกรดต้องใช้เบสอ่อนที่ปลอดภัย เพื่อลดความเป็นกรดโดยไม่ทำให้เกิดความร้อนหรือกัดกร่อนผิวหนังซ้ำสอง", "isCorrect": true },
+        { "text": "สารละลายโซเดียมไฮดรอกไซด์ (โซดาไฟ) เข้มข้น เพื่อทำลายกรดทันที", "rationale": "ตัวลวงที่เป็นอันตรายถึงชีวิต เพราะโซดาไฟเป็นเบสแก่ที่มีฤทธิ์กัดกร่อนรุนแรงมาก จะยิ่งทำลายเนื้อเยื่อผิวหนังอย่างสาหัส", "isCorrect": false },
+        { "text": "น้ำมะนาวหรือน้ำส้มสายชู เพื่อช่วยสมานแผลผิวหนัง", "rationale": "ตัวลวงเนื่องจากน้ำมะนาวมีฤทธิ์เป็นกรด การนำกรดไปทาซ้ำบนแผลที่โดนกรดกัดจะยิ่งทำให้แผลอักเสบรุนแรงขึ้น", "isCorrect": false },
+        { "text": "แอลกอฮอล์ล้างแผล 70% ชโลมทาในปริมาณมาก", "rationale": "ตัวลวงเนื่องจากแอลกอฮอล์ไม่ได้มีคุณสมบัติสะเทินฤทธิ์เคมีของกรด และจะทำให้เกิดอาการแสบร้อนแผลรุนแรง", "isCorrect": false }
+      ],
+      "hint": "ปฏิกิริยาสะเทิน (Neutralization) คือ กรด + เบส -> เกลือ + น้ำ แต่แผลบนผิวหนังมนุษย์ห้ามใช้สารเคมีที่เป็นเบสแก่เด็ดขาด"
+    }
+  ]
+};
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+let state = {
+  isStarted: false,
+  studentName: '',
+  studentId: '',
+  studentLevel: 'สกร. ระดับมัธยมศึกษาตอนต้น',
+  questions: [],
+  current: 0,
+  answers: [],
+  checked: []
+};
+
+function initQuiz() {
+  let shuffled = shuffleArray([...quizData.questions]);
+  shuffled = shuffled.map(q => {
+    let opts = shuffleArray([...q.answerOptions]);
+    return { ...q, answerOptions: opts };
+  });
+
+  state.questions = shuffled;
+  state.current = 0;
+  state.answers = new Array(shuffled.length).fill(null);
+  state.checked = new Array(shuffled.length).fill(false);
+}
+
+function startQuiz() {
+  const nameInput = document.getElementById('input-name').value.trim();
+  const idInput = document.getElementById('input-id').value.trim();
+  
+  if (!nameInput || !idInput) {
+    alert('⚠️ กรุณากรอกข้อมูลชื่อ-นามสกุล และรหัสนักศึกษาให้ครบถ้วนก่อนเริ่มทำข้อสอบครับ');
+    return;
+  }
+  
+  state.studentName = nameInput;
+  state.studentId = idInput;
+  state.isStarted = true;
+  
+  initQuiz();
+  renderApp();
+}
+
+function renderApp() {
+  const app = document.getElementById('quiz-app');
+  
+  if (!state.isStarted) {
+    app.innerHTML = `
+      <div class="card" style="animation: fadeIn 0.4s ease; text-align: center;">
+        <div class="emoji-banner">🧬 🧪 🔭 🌿</div>
+        <h2 style="font-size: 18px; margin-bottom: 18px; color: var(--primary); font-weight: 700;">ระบบลงทะเบียนเข้าทดสอบวิทยาศาสตร์ออนไลน์</h2>
+        
+        <div class="form-group">
+          <label for="input-name">ชื่อ - นามสกุล *</label>
+          <input type="text" id="input-name" class="form-control" placeholder="ระบุชื่อและนามสกุลของคุณ" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="input-id">รหัสนักศึกษา สกร. *</label>
+          <input type="text" id="input-id" class="form-control" placeholder="ระบุรหัสประจำตัวผู้เรียน" required>
+        </div>
+        
+        <div class="form-group">
+          <label>ระดับชั้น/หลักสูตร</label>
+          <input type="text" class="form-control" value="${state.studentLevel}" disabled style="background-color: #f1f5f9; font-weight: 600; color: var(--primary-dark)">
+        </div>
+        
+        <button class="btn btn-primary" onclick="startQuiz()" style="width: 100%; margin-top: 12px; font-size: 16px;">✏️ เริ่มทำข้อสอบชุดที่ 3 (ระดับท้าทาย)</button>
+      </div>
+    `;
+    return;
+  }
+
+  if (state.current >= state.questions.length) {
+    renderSummary(app);
+    return;
+  }
+
+  const q = state.questions[state.current];
+  const pct = Math.round((state.current / state.questions.length) * 100);
+  const selectedIdx = state.answers[state.current];
+  const isChecked = state.checked[state.current];
+
+  let hintHtml = q.hint ? `<div class="hint-box">💡 <b>แนวทางวิเคราะห์ (Hint):</b> ${q.hint}</div>` : '';
+  
+  let optionsHtml = q.answerOptions.map((opt, idx) => {
+    let cls = 'option-item';
+    if (selectedIdx === idx) cls += ' selected';
+    if (isChecked) {
+      cls += ' disabled';
+      if (opt.isCorrect) cls += ' correct-reveal';
+      else if (selectedIdx === idx) cls += ' wrong-reveal';
+    }
+    return `
+      <div class="${cls}" onclick="selectAnswer(${idx})">
+        <span class="radio-dot"></span>
+        <div style="flex-grow:1;">${opt.text}</div>
+      </div>
+    `;
+  }).join('');
+
+  let feedbackHtml = '';
+  if (isChecked && selectedIdx !== null) {
+    const isCorrect = q.answerOptions[selectedIdx].isCorrect;
+    const rationale = q.answerOptions[selectedIdx].rationale;
+    feedbackHtml = `
+      <div class="rationale-box ${isCorrect ? 'correct' : 'wrong'}">
+        <b>${isCorrect ? '✨ ถูกต้อง! อธิบายเหตุผลตามหลักวิทยาศาสตร์ได้ครบถ้วน' : '❌ ยังไม่ถูก! สังเกตตัวลวงทางวิทยาศาสตร์'}</b> — ${rationale}
+      </div>
+    `;
+  }
+
+  app.innerHTML = `
+    <div class="card">
+      <div class="progress-container">
+        <span><b>ข้อที่ ${state.current + 1}</b> จาก ${state.questions.length}</span>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+        <span>${pct}% เสร็จสิ้น</span>
+      </div>
+      
+      <div class="question-text">${q.question}</div>
+      ${hintHtml}
+      <div class="options-list">${optionsHtml}</div>
+      ${feedbackHtml}
+
+      <div class="nav-actions">
+        <button class="btn btn-secondary" onclick="goPrev()" ${state.current === 0 ? 'disabled' : ''}>⬅️ ข้อก่อนหน้า</button>
+        ${!isChecked ? 
+          `<button class="btn btn-primary" onclick="checkAnswer()" ${selectedIdx === null ? 'disabled' : ''}>✔️ ส่งตรวจคำตอบ</button>` :
+          `<button class="btn btn-primary" onclick="goNext()">${state.current === state.questions.length - 1 ? '🏁 ประมวลผลลัพธ์คะแนน' : 'ข้อถัดไป ➡️'}</button>`
+        }
+      </div>
+    </div>
+  `;
+}
+
+function renderSummary(app) {
+  let score = 0;
+  let reviewHtml = '';
+
+  state.questions.forEach((q, i) => {
+    const userAnsIdx = state.answers[i];
+    const isCorrect = userAnsIdx !== null && q.answerOptions[userAnsIdx].isCorrect;
+    if (isCorrect) score++;
+
+    let correctOpt = q.answerOptions.find(o => o.isCorrect);
+    let userOpt = userAnsIdx !== null ? q.answerOptions[userAnsIdx] : null;
+
+    reviewHtml += `
+      <div class="review-item">
+        <div style="font-weight:600;margin-bottom:6px;color:var(--text)">ข้อ ${i+1}: ${q.question}</div>
+        <div style="color:${isCorrect ? 'var(--green)' : 'var(--red)'}; font-weight:600; font-size:14px;">
+          ${isCorrect ? '🔹 ผลการตอบ: ถูกต้อง (Correct)' : `🔸 ผลการตอบ: ผิด (คำตอบของคุณ: ${userOpt ? userOpt.text : 'ไม่เลือกคำตอบ'})`}
+        </div>
+        <div style="color:var(--text-muted);font-size:13px;margin-top:4px;background:#f8fafc;padding:8px;border-radius:6px;">
+          <b>💡 บทวิเคราะห์และคำอธิบายกลไกทางวิทยาศาสตร์:</b> ${correctOpt ? correctOpt.rationale : ''}
+        </div>
+      </div>
+    `;
+  });
+
+  const pct = Math.round((score / state.questions.length) * 100);
+  const isPass = pct >= 60;
+  const grade = isPass ? "ผ่านเกณฑ์การประเมินคิดวิเคราะห์ทางวิทยาศาสตร์ 🎓" : "ต้องพัฒนาการคิดวิเคราะห์และทบทวนบทเรียน 📘";
+  const gc = isPass ? "grade-pass" : "grade-fail";
+  const msg = isPass ? "ขอชื่นชม! ท่านมีความเข้าใจในกระบวนการทางวิทยาศาสตร์ การทดลอง และสามารถคิดวิเคราะห์ได้อย่างแม่นยำ" : "ไม่เป็นไรครับ แนะนำให้ศึกษาบทวิเคราะห์ตัวช้อยส์ลวงและคำอธิบายกลไกด้านล่างเพื่อเพิ่มความรอบคอบรอบด้านในอนาคต";
+
+  app.innerHTML = `
+    <div class="card summary-card">
+      <div style="font-size:40px;margin-bottom:8px;">🏆</div>
+      <h2 style="font-size:22px; margin-bottom:4px; color: var(--primary); font-weight:700;">ใบรายงานผลคะแนนสอบดิจิทัล</h2>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">สถาบันส่งเสริมการเรียนรู้ (สกร.)</div>
+      
+      <div class="student-info-box">
+        <p>👤 <b>ชื่อผู้เข้าสอบ:</b> ${state.studentName}</p>
+        <p>🆔 <b>รหัสประจำตัว:</b> ${state.studentId}</p>
+        <p>🏫 <b>ระดับการศึกษา:</b> ${state.studentLevel}</p>
+      </div>
+
+      <div style="font-size:16px;color:var(--text); margin-top:14px;">สรุปคะแนนทำได้รวม <b>${score}</b> คะแนน จากทั้งหมด <b>${state.questions.length}</b> ข้อ</div>
+      <div style="margin:10px 0;"><span class="grade-pill ${gc}">${grade}</span></div>
+      <div style="color:var(--text-muted);margin-bottom:16px;font-size:14px;padding:0 10px;">${msg}</div>
+      
+      <div class="grid-stats">
+        <div class="stat-box"><div class="stat-num" style="color:var(--green)">${score}</div><div class="slbl">ถูกต้อง (ข้อ)</div></div>
+        <div class="stat-box"><div class="stat-num" style="color:var(--red)">${state.questions.length - score}</div><div class="slbl">ผิดพลาด (ข้อ)</div></div>
+        <div class="stat-box"><div class="stat-num" style="color:var(--primary)">${pct}%</div><div class="slbl">คิดเป็นเปอร์เซ็นต์</div></div>
+      </div>
+      
+      <p style="font-size:12px; color:var(--red); font-weight:600; margin-bottom:18px; background:var(--red-light); padding:6px; border-radius:6px;">📸 นักศึกษาสามารถแคปภาพหน้าจอนี้เพื่อนำส่งรายงานเป็นหลักฐานการเรียนรู้แด่คุณครู สกร.</p>
+      
+      <button class="btn btn-primary" onclick="restartQuiz()">🔄 ทำแบบทดสอบใหม่อีกครั้ง (สุ่มสลับโจทย์)</button>
+    </div>
+    
+    <div class="card" style="margin-top:6px;">
+      <div class="review-title">📋 สรุปเฉลยและบทวิเคราะห์กระบวนการคิดทางวิทยาศาสตร์อย่างละเอียด</div>
+      ${reviewHtml}
+    </div>
+  `;
+}
+
+function selectAnswer(i) { if (!state.checked[state.current]) { state.answers[state.current] = i; renderApp(); } }
+function checkAnswer()   { if (state.answers[state.current] !== null) { state.checked[state.current] = true; renderApp(); } }
+function goNext()        { state.current++; renderApp(); }
+function goPrev()        { if (state.current > 0) { state.current--; renderApp(); } }
+function restartQuiz()   { 
+  state.isStarted = false; 
+  renderApp(); 
+}
+
+renderApp();
+</script>
+</body>
+</html>
